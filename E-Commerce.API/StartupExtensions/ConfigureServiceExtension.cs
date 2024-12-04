@@ -15,6 +15,7 @@ using E_Commerce.Infrastructure.UnitOfWorkConfig;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using E_Commerce.Core.MappingProfile;
 using E_Commerce.Core.Queries.BrandQueries;
+using E_Commerce.Core.Caching;
 
 namespace E_Commerce.API.StartupExtensions
 {
@@ -82,6 +83,7 @@ namespace E_Commerce.API.StartupExtensions
                         .AllowAnyHeader());
             });
             services.AddLogging();
+            services.AddDistributedMemoryCache();
             services.AddAutoMapper(typeof(BrandConfig).Assembly);
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetAllBrandQuery).Assembly));
             services.AddHealthChecks();
@@ -92,6 +94,7 @@ namespace E_Commerce.API.StartupExtensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IBrandService, BrandService>();
+            services.AddSingleton<ICacheService, CacheService>();
 
             services.AddControllers();
             services.AddEndpointsApiExplorer();

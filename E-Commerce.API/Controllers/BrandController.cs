@@ -196,7 +196,30 @@ namespace E_Commerce.API.Controllers
                 StatusCode = HttpStatusCode.NotFound
             });
         }
-
+        [HttpGet("getAllBrands")]
+        public async Task<ActionResult<ApiResponse>> GetAllBrands([FromQuery]PaginationDto paginationDto)
+        {
+            _logger.LogInformation("Fetching all brands");
+            var brands = await _mediator.Send(new GetAllBrandQuery(paginationDto));
+            if (brands != null)
+            {
+                _logger.LogInformation("Brands retrieved successfully");
+                return Ok(new ApiResponse
+                {
+                    Result = brands,
+                    Message = "Brands found successfully.",
+                    IsSuccess = true,
+                    StatusCode = HttpStatusCode.OK
+                });
+            }
+            _logger.LogWarning("No brands found");
+            return NotFound(new ApiResponse
+            {
+                Message = "No brands found.",
+                IsSuccess = false,
+                StatusCode = HttpStatusCode.NotFound
+            });
+        }
         /// <summary>
         /// Retrieves brands by their name.
         /// </summary>
