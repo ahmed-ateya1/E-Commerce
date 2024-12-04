@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35521.163 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ABAAD6C9-7ABC-48B3-AC5E-17A4AD35B791}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Commerce.API", "E-Commerce.API\E-Commerce.API.csproj", "{3E93521E-52D1-4F7B-BA8B-C4B4C8B8605F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Commerce.Infrastructure", "E-Commerce.Infrastructure\E-Commerce.Infrastructure.csproj", "{FA9B7187-7678-43D0-9CF1-2957A8BEB1B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Commerce.Core", "E-Commerce.Core\E-Commerce.Core.csproj", "{8ADBA52A-7632-45E5-967E-F21393043060}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E93521E-52D1-4F7B-BA8B-C4B4C8B8605F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E93521E-52D1-4F7B-BA8B-C4B4C8B8605F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E93521E-52D1-4F7B-BA8B-C4B4C8B8605F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E93521E-52D1-4F7B-BA8B-C4B4C8B8605F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA9B7187-7678-43D0-9CF1-2957A8BEB1B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA9B7187-7678-43D0-9CF1-2957A8BEB1B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA9B7187-7678-43D0-9CF1-2957A8BEB1B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA9B7187-7678-43D0-9CF1-2957A8BEB1B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ADBA52A-7632-45E5-967E-F21393043060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ADBA52A-7632-45E5-967E-F21393043060}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ADBA52A-7632-45E5-967E-F21393043060}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ADBA52A-7632-45E5-967E-F21393043060}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3E93521E-52D1-4F7B-BA8B-C4B4C8B8605F} = {ABAAD6C9-7ABC-48B3-AC5E-17A4AD35B791}
+		{FA9B7187-7678-43D0-9CF1-2957A8BEB1B8} = {ABAAD6C9-7ABC-48B3-AC5E-17A4AD35B791}
+		{8ADBA52A-7632-45E5-967E-F21393043060} = {ABAAD6C9-7ABC-48B3-AC5E-17A4AD35B791}
+	EndGlobalSection
+EndGlobal

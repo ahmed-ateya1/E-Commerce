@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>E-Commerce.API</name>
+    </assembly>
+    <members>
+        <member name="T:E_Commerce.API.Controllers.AccountController">
+            <summary>
+            Manages user accounts, including registration, login, password reset, roles, and token handling.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AccountController.#ctor(E_Commerce.Core.ServicesContract.IAuthenticationServices,Microsoft.AspNetCore.Identity.UserManager{E_Commerce.Core.Domain.IdentityEntities.ApplicationUser},Microsoft.AspNetCore.Identity.UI.Services.IEmailSender,Microsoft.AspNetCore.Identity.SignInManager{E_Commerce.Core.Domain.IdentityEntities.ApplicationUser},E_Commerce.Core.Domain.RepositoriesContract.IUnitOfWork,Microsoft.AspNetCore.Identity.IPasswordHasher{E_Commerce.Core.Domain.IdentityEntities.ApplicationUser})">
+            <summary>
+            Initializes a new instance of the <see cref="T:E_Commerce.API.Controllers.AccountController"/> class.
+            </summary>
+            <param name="authenticationServices">Authentication service.</param>
+            <param name="userManager">User manager service.</param>
+            <param name="emailSender">Email sender service.</param>
+            <param name="signInManager">Sign-in manager service.</param>
+            <param name="unitOfWork">Unit of work service.</param>
+            <param name="passwordHasher">Password hasher service.</param>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AccountController.RegisterCleintAsync(E_Commerce.Core.Dtos.AuthenticationDto.RegisterDTO)">
+            <summary>
+            Registers a new client account.
+            </summary>
+            <param name="registerDTO">Client registration details.</param>
+            <returns>Authentication response with token and status.</returns>
+            <response code="200">Client registered successfully.</response>
+            <response code="400">Invalid input or request.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AccountController.LoginAsync(E_Commerce.Core.Dtos.AuthenticationDto.LoginDTO)">
+            <summary>
+            Logs in a user or company.
+            </summary>
+            <param name="loginDTO">Login credentials (email, password).</param>
+            <returns>Authentication response with token and status.</returns>
+            <response code="200">Login successful.</response>
+            <response code="400">Invalid credentials or input.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AccountController.ForgotPassword(E_Commerce.Core.Dtos.AuthenticationDto.ForgotPasswordDTO)">
+            <summary>
+            Sends a password reset OTP to the user's email.
+            </summary>
+            <param name="forgotPassword">Email to send the password reset link to.</param>
+            <returns>Status message.</returns>
+            <response code="200">Password reset OTP sent successfully.</response>
+            <response code="400">Invalid input.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AccountController.ResetPassword(E_Commerce.Core.Dtos.AuthenticationDto.ResetPasswordDTO)">
+            <summary>
+            Resets the user's password using an OTP.
+            </summary>
+            <param name="resetPassword">Reset password request details, including OTP.</param>
+            <returns>Status message.</returns>
+            <response code="200">Password reset successfully.</response>
+            <response code="400">Invalid OTP or request.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AccountController.ChangePassword(E_Commerce.Core.Dtos.AuthenticationDto.ChangePasswordRequest)">
+            <summary>
+            Changes the user's password.
+            </summary>
+            <param name="model">Change password request details.</param>
+            <returns>Status message.</returns>
+            <response code="200">Password changed successfully.</response>
+            <response code="400">Invalid current password.</response>
+            <response code="404">User not found.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AccountController.IsEmailInUse(System.String)">
+            <summary>
+            Checks if the email is already in use.
+            </summary>
+            <param name="email">The email to check.</param>
+            <returns>True if the email is in use; otherwise, false.</returns>
+            <response code="200">Check successful, result returned.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AccountController.VerifyOtp(E_Commerce.Core.Dtos.AuthenticationDto.OtpVerificationRequest)">
+            <summary>
+            Verifies the OTP code.
+            </summary>
+            <param name="request">OTP verification request.</param>
+            <returns>Status message.</returns>
+            <response code="200">OTP verified successfully.</response>
+            <response code="400">Invalid or expired OTP.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AccountController.AddRoleAsync(E_Commerce.Core.Dtos.AuthenticationDto.AddRoleDTO)">
+            <summary>
+            Adds a new role to the user.
+            </summary>
+            <param name="model">Role details to assign.</param>
+            <returns>Status message.</returns>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AccountController.RefreshToken">
+            <summary>
+            Refreshes the user's authentication token.
+            </summary>
+            <returns>New authentication token.</returns>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AccountController.RevokeToken(E_Commerce.Core.Dtos.AuthenticationDto.RevokTokenDTO)">
+            <summary>
+            Revokes a refresh token.
+            </summary>
+            <param name="revokTokenDTO">Token details to revoke.</param>
+            <returns>Status message.</returns>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AccountController.SetRefreshToken(System.String,System.DateTime)">
+            <summary>
+            Sets the refresh token cookie in the response.
+            </summary>
+            <param name="refreshToken">The refresh token string.</param>
+            <param name="expires">The expiration time for the token.</param>
+        </member>
+        <member name="T:E_Commerce.API.Controllers.BrandController">
+            <summary>
+            Controller to manage brand-related operations in the E-Commerce system.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.BrandController.#ctor(E_Commerce.Core.Domain.RepositoriesContract.IUnitOfWork,MediatR.IMediator,Microsoft.Extensions.Logging.ILogger{E_Commerce.API.Controllers.BrandController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:E_Commerce.API.Controllers.BrandController"/> class.
+            </summary>
+            <param name="unitOfWork">Instance of <see cref="T:E_Commerce.Core.Domain.RepositoriesContract.IUnitOfWork"/> for database operations.</param>
+            <param name="mediator">Instance of <see cref="T:MediatR.IMediator"/> for handling commands and queries.</param>
+            <param name="logger">Logger instance for logging actions.</param>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.BrandController.AddBrand(E_Commerce.Core.Dtos.BrandDto.BrandAddRequest)">
+            <summary>
+            Creates a new brand.
+            </summary>
+            <param name="brand">The <see cref="T:E_Commerce.Core.Dtos.BrandDto.BrandAddRequest"/> containing the brand details.</param>
+            <response code="200">Brand created successfully.</response>
+            <response code="400">Failed to create the brand.</response>
+            <returns>An API response indicating the result of the brand creation.</returns>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.BrandController.UpdateBrand(E_Commerce.Core.Dtos.BrandDto.BrandUpdateRequest)">
+            <summary>
+            Updates an existing brand.
+            </summary>
+            <param name="brand">The <see cref="T:E_Commerce.Core.Dtos.BrandDto.BrandUpdateRequest"/> containing updated brand details.</param>
+            <response code="200">Brand updated successfully.</response>
+            <response code="404">Brand not found.</response>
+            <response code="400">Failed to update the brand.</response>
+            <returns>An API response indicating the result of the brand update.</returns>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.BrandController.DeleteBrand(System.Guid)">
+            <summary>
+            Deletes a brand by its ID.
+            </summary>
+            <param name="id">The ID of the brand to delete.</param>
+            <response code="200">Brand deleted successfully.</response>
+            <response code="404">Brand not found.</response>
+            <response code="400">Failed to delete the brand.</response>
+            <returns>An API response indicating the result of the brand deletion.</returns>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.BrandController.GetBrand(System.Guid)">
+            <summary>
+            Retrieves a brand by its ID.
+            </summary>
+            <param name="id">The ID of the brand to retrieve.</param>
+            <response code="200">Brand retrieved successfully.</response>
+            <response code="404">Brand not found.</response>
+            <returns>An API response containing the retrieved brand details.</returns>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.BrandController.GetBrandByName(System.String)">
+            <summary>
+            Retrieves brands by their name.
+            </summary>
+            <param name="name">The name of the brand to search for.</param>
+            <response code="200">Brands retrieved successfully.</response>
+            <response code="404">No brands found matching the name.</response>
+            <returns>An API response containing the list of brands matching the name.</returns>
+        </member>
+        <member name="T:E_Commerce.API.Middleware.GlobalExceptionHandlingMiddleware">
+            <summary>
+            Middleware to handle global exceptions.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.Middleware.GlobalExceptionHandlingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILogger{E_Commerce.API.Middleware.GlobalExceptionHandlingMiddleware})">
+            <summary>
+            Initializes a new instance of the <see cref="T:E_Commerce.API.Middleware.GlobalExceptionHandlingMiddleware"/> class.
+            </summary>
+            <param name="next">The next middleware in the pipeline.</param>
+        </member>
+        <member name="M:E_Commerce.API.Middleware.GlobalExceptionHandlingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invokes the middleware to handle the HTTP context.
+            </summary>
+            <param name="httpContext">The HTTP context.</param>
+            <returns>A task that represents the completion of request processing.</returns>
+        </member>
+        <member name="M:E_Commerce.API.Middleware.GlobalExceptionHandlingMiddleware.HandleExceptionAsync(Microsoft.AspNetCore.Http.HttpContext,System.Exception)">
+            <summary>
+            Handles exceptions and returns a standard error response.
+            </summary>
+            <param name="context">The HTTP context.</param>
+            <param name="exception">The exception.</param>
+            <returns>A task that represents the completion of response writing.</returns>
+        </member>
+        <member name="T:E_Commerce.API.Middleware.GlobalExceptionHandlingMiddlewareExtensions">
+            <summary>
+            Extension methods to add the <see cref="T:E_Commerce.API.Middleware.GlobalExceptionHandlingMiddleware"/> to the application's request pipeline.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.Middleware.GlobalExceptionHandlingMiddlewareExtensions.UseGlobalExceptionHandlingMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds the <see cref="T:E_Commerce.API.Middleware.GlobalExceptionHandlingMiddleware"/> to the application's request pipeline.
+            </summary>
+            <param name="builder">The application builder.</param>
+            <returns>The application builder with the middleware added.</returns>
+        </member>
+        <member name="T:E_Commerce.API.Program">
+            <summary>
+            The main namespace for the E-Commerce API application.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.Program.Main(System.String[])">
+            <summary>
+            The main entry point for the application.
+            </summary>
+            <param name="args">An array of command-line arguments.</param>
+        </member>
+        <member name="T:E_Commerce.API.StartupExtensions.ConfigureServiceExtension">
+            <summary>
+            Provides extension methods for configuring services in the application.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.StartupExtensions.ConfigureServiceExtension.ServiceConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Configures the services required for the application.
+            </summary>
+            <param name="services">The service collection to add the services to.</param>
+            <param name="configuration">The configuration to use for setting up the services.</param>
+            <returns>The updated service collection.</returns>
+        </member>
+    </members>
+</doc>
