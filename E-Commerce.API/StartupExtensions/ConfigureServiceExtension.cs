@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using E_Commerce.Core.MappingProfile;
 using E_Commerce.Core.Queries.BrandQueries;
 using E_Commerce.Core.Caching;
+using E_Commerce.API.FileServices;
 
 namespace E_Commerce.API.StartupExtensions
 {
@@ -95,6 +96,8 @@ namespace E_Commerce.API.StartupExtensions
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IBrandService, BrandService>();
             services.AddSingleton<ICacheService, CacheService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IFileServices, FileService>();
 
             services.AddControllers();
             services.AddEndpointsApiExplorer();

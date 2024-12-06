@@ -168,6 +168,15 @@
             <response code="404">Brand not found.</response>
             <returns>An API response containing the retrieved brand details.</returns>
         </member>
+        <member name="M:E_Commerce.API.Controllers.BrandController.GetAllBrands(E_Commerce.Core.Dtos.PaginationDto)">
+            <summary>
+            Retrieves all brands.
+            </summary>
+            <param name="paginationDto">Contain pagination index and pagination size</param>
+            <response code="200">Brands retrieved successfully.</response>
+            <response code="404">No brands found matching the name.</response>
+            <returns>An API response containing the list of brands matching the name.</returns>
+        </member>
         <member name="M:E_Commerce.API.Controllers.BrandController.GetBrandByName(System.String)">
             <summary>
             Retrieves brands by their name.
@@ -176,6 +185,104 @@
             <response code="200">Brands retrieved successfully.</response>
             <response code="404">No brands found matching the name.</response>
             <returns>An API response containing the list of brands matching the name.</returns>
+        </member>
+        <member name="T:E_Commerce.API.Controllers.CategoryController">
+            <summary>
+            API Controller for managing categories.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CategoryController.#ctor(MediatR.IMediator,Microsoft.Extensions.Logging.ILogger{E_Commerce.API.Controllers.CategoryController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:E_Commerce.API.Controllers.CategoryController"/> class.
+            </summary>
+            <param name="mediator">The mediator instance for handling requests.</param>
+            <param name="logger">The logger instance for logging information.</param>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CategoryController.GetCategories">
+            <summary>
+            Retrieves all categories.
+            </summary>
+            <returns>An API response with the list of categories or an error message.</returns>
+            <response code="200">Categories retrieved successfully.</response>
+            <response code="400">Failed to retrieve the categories.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CategoryController.GetCategory(System.Guid)">
+            <summary>
+            Retrieves a category by ID.
+            </summary>
+            <param name="id">The ID of the category to retrieve.</param>
+            <returns>An API response with the category details or an error message.</returns>
+            <response code="200">Category retrieved successfully.</response>
+            <response code="400">Failed to retrieve the category.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CategoryController.GetCategoriesforParent(System.Guid)">
+            <summary>
+            Retrieves categories by parent ID.
+            </summary>
+            <param name="parentId">The ID of the parent category.</param>
+            <returns>An API response with the list of categories or an error message.</returns>
+            <response code="200">Categories retrieved successfully by parent.</response>
+            <response code="400">Failed to retrieve categories by parent.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CategoryController.AddCategory(E_Commerce.Core.Dtos.CategoryDto.CategoryAddRequest)">
+            <summary>
+            Adds a new category.
+            </summary>
+            <param name="command">The details of the category to be added.</param>
+            <returns>An API response with the created category or an error message.</returns>
+            <response code="200">Category added successfully.</response>
+            <response code="400">Failed to add the category.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CategoryController.UpdateCategory(E_Commerce.Core.Dtos.CategoryDto.CategoryUpdateRequest)">
+            <summary>
+            Updates an existing category.
+            </summary>
+            <param name="command">The updated category details.</param>
+            <returns>An API response with the updated category or an error message.</returns>
+            <response code="200">Category updated successfully.</response>
+            <response code="400">Failed to update the category.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CategoryController.DeleteCategory(System.Guid)">
+            <summary>
+            Deletes a category by ID.
+            </summary>
+            <param name="id">The ID of the category to be deleted.</param>
+            <returns>An API response indicating success or failure.</returns>
+            <response code="200">Category deleted successfully.</response>
+            <response code="400">Failed to delete the category.</response>
+        </member>
+        <member name="T:E_Commerce.API.FileServices.FileService">
+            <summary>
+            Provides file-related services for the application.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.FileServices.FileService.#ctor(Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.Extensions.Logging.ILogger{E_Commerce.API.FileServices.FileService})">
+            <summary>
+            Initializes a new instance of the <see cref="T:E_Commerce.API.FileServices.FileService"/> class.
+            </summary>
+            <param name="environment">The web host environment.</param>
+            <param name="httpContextAccessor">The HTTP context accessor.</param>
+        </member>
+        <member name="M:E_Commerce.API.FileServices.FileService.CreateFile(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Creates a new file in the "Upload" directory.
+            </summary>
+            <param name="file">The file to be created.</param>
+            <returns>The URL of the created file.</returns>
+        </member>
+        <member name="M:E_Commerce.API.FileServices.FileService.DeleteFile(System.String)">
+            <summary>
+            Deletes a file from the "Upload" directory.
+            </summary>
+            <param name="fileName">The URL of the file to be deleted.</param>
+        </member>
+        <member name="M:E_Commerce.API.FileServices.FileService.UpdateFile(Microsoft.AspNetCore.Http.IFormFile,System.String)">
+            <summary>
+            Updates a file in the "Upload" directory.
+            </summary>
+            <param name="newFile">The new file to be updated.</param>
+            <param name="currentFileName">The URL of the current file to be replaced.</param>
+            <returns>The URL of the updated file.</returns>
         </member>
         <member name="T:E_Commerce.API.Middleware.GlobalExceptionHandlingMiddleware">
             <summary>
