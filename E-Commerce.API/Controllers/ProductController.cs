@@ -3,14 +3,10 @@ using E_Commerce.Core.Domain.Entities;
 using E_Commerce.Core.Domain.RepositoriesContract;
 using E_Commerce.Core.Dtos;
 using E_Commerce.Core.Dtos.ProductDto;
-using E_Commerce.Core.Helper;
 using E_Commerce.Core.Queries.ProductQueries;
-using E_Commerce.Core.ServicesContract;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using System.Net;
 
 namespace E_Commerce.API.Controllers

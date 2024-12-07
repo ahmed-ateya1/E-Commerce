@@ -100,7 +100,7 @@ namespace E_Commerce.API.StartupExtensions
             services.AddScoped<IFileServices, FileService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductImagesService, ProductImagesService>();
-
+            services.AddScoped<ITechnicalSpecificationService, TechnicalSpecificationService>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
