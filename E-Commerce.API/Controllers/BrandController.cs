@@ -199,15 +199,14 @@ namespace E_Commerce.API.Controllers
         /// <summary>
         /// Retrieves all brands.
         /// </summary>
-        /// <param name="paginationDto">Contain pagination index and pagination size</param>
         /// <response code="200">Brands retrieved successfully.</response>
         /// <response code="404">No brands found matching the name.</response>
         /// <returns>An API response containing the list of brands matching the name.</returns>
         [HttpGet("getAllBrands")]
-        public async Task<ActionResult<ApiResponse>> GetAllBrands([FromQuery]PaginationDto paginationDto)
+        public async Task<ActionResult<ApiResponse>> GetAllBrands()
         {
             _logger.LogInformation("Fetching all brands");
-            var brands = await _mediator.Send(new GetAllBrandQuery(paginationDto));
+            var brands = await _mediator.Send(new GetAllBrandQuery());
             if (brands != null)
             {
                 _logger.LogInformation("Brands retrieved successfully");
@@ -239,7 +238,7 @@ namespace E_Commerce.API.Controllers
         {
             _logger.LogInformation("Fetching brands by name: {BrandName}", name);
 
-            var brands = await _mediator.Send(new GetAllBrandQuery(new PaginationDto(), x => x.BrandName.ToUpper().Contains(name.ToUpper())));
+            var brands = await _mediator.Send(new GetAllBrandwithNameQuery(name));
             if (brands != null)
             {
                 _logger.LogInformation("Brands retrieved successfully by name: {BrandName}", name);

@@ -15,6 +15,6 @@ namespace E_Commerce.Core.ServicesContract
         Task<BrandResponse?> UpdateAsync(BrandUpdateRequest? brandUpdateRequest);
         Task<bool> DeleteAsync(Guid? id);
         Task<BrandResponse?> GetByAsync(Expression<Func<Brand, bool>> filter);
-        Task<IEnumerable<BrandResponse>> GetAllAsync(Expression<Func<Brand, bool>>? filter = null , int? pageIndex = null, int? pageSize = null);
+        Task<IEnumerable<BrandResponse>> GetAllAsync(Expression<Func<Brand, bool>>? filter = null);
     }
 }

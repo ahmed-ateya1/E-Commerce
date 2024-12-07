@@ -6,23 +6,23 @@ using MediatR;
 
 namespace E_Commerce.Core.Handler.BrandHandler
 {
-    public class GetAllBrandQueryHandler : IRequestHandler<GetAllBrandQuery, IEnumerable<BrandResponse>>
+    public class GetAllBrandwithNameQueryHandler : IRequestHandler<GetAllBrandwithNameQuery, IEnumerable<BrandResponse>>
     {
         private readonly IBrandService _brandService;
         private readonly ICacheService _cacheService;
 
-        public GetAllBrandQueryHandler(IBrandService brandService, ICacheService cacheService)
+        public GetAllBrandwithNameQueryHandler(IBrandService brandService, ICacheService cacheService)
         {
             _brandService = brandService;
             _cacheService = cacheService;
         }
 
-        public async Task<IEnumerable<BrandResponse>> Handle(GetAllBrandQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<BrandResponse>> Handle(GetAllBrandwithNameQuery request, CancellationToken cancellationToken)
         {
-            return await _cacheService.GetAsync($"all_brands", async () =>
+            return await _cacheService.GetAsync($"all_brands_{request.Name}", async () =>
             {
                 return await _brandService
-                .GetAllAsync();
+                .GetAllAsync(x => x.BrandName.ToUpper().Contains(request.Name.ToUpper()));
             }, cancellationToken);
         }
     }

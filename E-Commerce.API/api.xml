@@ -168,11 +168,10 @@
             <response code="404">Brand not found.</response>
             <returns>An API response containing the retrieved brand details.</returns>
         </member>
-        <member name="M:E_Commerce.API.Controllers.BrandController.GetAllBrands(E_Commerce.Core.Dtos.PaginationDto)">
+        <member name="M:E_Commerce.API.Controllers.BrandController.GetAllBrands">
             <summary>
             Retrieves all brands.
             </summary>
-            <param name="paginationDto">Contain pagination index and pagination size</param>
             <response code="200">Brands retrieved successfully.</response>
             <response code="404">No brands found matching the name.</response>
             <returns>An API response containing the list of brands matching the name.</returns>

@@ -81,15 +81,11 @@ namespace E_Commerce.Core.Services
         }
 
         public async Task<IEnumerable<BrandResponse>> GetAllAsync
-            (Expression<Func<Brand, bool>>? filter = null, int? pageIndex = null, int? pageSize = null)
+            (Expression<Func<Brand, bool>>? filter = null)
         {
-            if(pageIndex == null || pageSize == null)
-            {
-                pageSize = 10;
-                pageIndex = 1;
-            }
+         
             var brands = await _unitOfWork.Repository<Brand>()
-                .GetAllAsync(filter, "",null,pageIndex, pageSize);
+                .GetAllAsync(filter);
 
             if (!brands.Any())
                 return [];
