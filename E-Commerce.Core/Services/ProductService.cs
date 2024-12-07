@@ -184,6 +184,8 @@ namespace E_Commerce.Core.Services
                 .GetAllAsync(
                     predicate,
                     includeProperties: "Brand,Category,User,ProductImages",
+                    sortBy: pagination.SortBy,
+                    sortDirection: pagination.SortDirection,
                     pageSize: pagination.PageSize,
                     pageIndex: pagination.PageIndex);
 
@@ -194,8 +196,8 @@ namespace E_Commerce.Core.Services
                 _logger.LogInformation("No products found matching the criteria.");
                 return new PaginatedResponse<ProductResponse>
                 {
-                    PageIndex = pagination.PageIndex.Value,
-                    PageSize = pagination.PageSize.Value,
+                    PageIndex = pagination.PageIndex,
+                    PageSize = pagination.PageSize,
                     Items = new List<ProductResponse>(),
                     TotalCount = 0
                 };
@@ -207,8 +209,8 @@ namespace E_Commerce.Core.Services
 
             return new PaginatedResponse<ProductResponse>
             {
-                PageIndex = pagination.PageIndex.Value,
-                PageSize = pagination.PageSize.Value,
+                PageIndex = pagination.PageIndex,
+                PageSize = pagination.PageSize,
                 Items = productResponses,
                 TotalCount = productCount
             };

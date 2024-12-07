@@ -25,7 +25,7 @@ namespace E_Commerce.Core.Handler.ProductHandler
 
         public async Task<PaginatedResponse<ProductResponse>> Handle(GetProductByCategoryQuery request, CancellationToken cancellationToken)
         {
-            return await _cacheService.GetAsync($"GetProductByCategory{request.CategoryId}{request.Pagination.PageIndex}{request.Pagination.PageSize}",
+            return await _cacheService.GetAsync($"GetProductByCategory{request.CategoryId}{request.Pagination.PageIndex}{request.Pagination.PageSize}{request.Pagination.SortBy}{request.Pagination.SortDirection}",
                 async () =>
                 {
                     return await _productService.GetAllAsync(x => x.CategoryID == request.CategoryId, request.Pagination);

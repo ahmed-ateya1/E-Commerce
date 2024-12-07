@@ -65,11 +65,12 @@ namespace E_Commerce.Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<T>> GetAllAsync(
-            Expression<Func<T, bool>>? filter = null,
-            string includeProperties = "",
-            Expression<Func<T, object>>? orderBy = null,
-            int? pageIndex = null,
-            int? pageSize = null)
+     Expression<Func<T, bool>>? filter = null,
+     string includeProperties = "",
+     string? sortBy = null,
+     string? sortDirection = "asc",
+     int? pageIndex = null,
+     int? pageSize = null)
         {
             IQueryable<T> query = _dbSet;
 
@@ -84,12 +85,22 @@ namespace E_Commerce.Infrastructure.Repositories
                 }
             }
 
-            if (orderBy != null)
+            // Apply Sorting
+            if (!string.IsNullOrEmpty(sortBy))
             {
-                query = query.OrderBy(orderBy);
+                var parameter = Expression.Parameter(typeof(T), "x");
+                var property = Expression.Property(parameter, sortBy);
+                var lambda = Expression.Lambda(property, parameter);
+
+                string methodName = sortDirection?.ToLower() == "desc" ? "OrderByDescending" : "OrderBy";
+                var method = typeof(Queryable).GetMethods()
+                    .First(m => m.Name == methodName && m.GetParameters().Length == 2)
+                    .MakeGenericMethod(typeof(T), property.Type);
+
+                query = (IQueryable<T>)method.Invoke(null, new object[] { query, lambda });
             }
 
-
+            // Apply Pagination
             if (pageIndex != null && pageSize != null)
             {
                 query = query.Skip((pageIndex.Value - 1) * pageSize.Value).Take(pageSize.Value);
@@ -97,6 +108,7 @@ namespace E_Commerce.Infrastructure.Repositories
 
             return await query.ToListAsync();
         }
+
 
 
 

@@ -26,7 +26,7 @@ namespace E_Commerce.Core.Handler.ProductHandler
         public async Task<PaginatedResponse<ProductResponse>> Handle(GetProductsByPriceRangeQuery request, CancellationToken cancellationToken)
         {
             return await _cacheService
-                .GetAsync($"GetProductsByPriceRange{request.PriceRange.Min}{request.PriceRange.Max}{request.PriceRange.Pagination.PageIndex}{request.PriceRange.Pagination.PageSize}"
+                .GetAsync($"GetProductsByPriceRange{request.PriceRange.Min}{request.PriceRange.Max}{request.PriceRange.Pagination.PageIndex}{request.PriceRange.Pagination.PageSize}{request.PriceRange.Pagination.SortBy}{request.PriceRange.Pagination.SortDirection}"
                 , async () =>
                 {
                     return await _productService

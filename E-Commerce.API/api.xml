@@ -277,7 +277,7 @@
             <response code="200">Product deleted successfully.</response>
             <response code="400">Failed to delete the product or invalid ID.</response>
         </member>
-        <member name="M:E_Commerce.API.Controllers.ProductController.GetAllProducts(E_Commerce.Core.Dtos.PaginationDto)">
+        <member name="M:E_Commerce.API.Controllers.ProductController.GetAllProducts(PaginationDto)">
             <summary>
             Retrieves a paginated list of all products.
             </summary>
@@ -309,7 +309,7 @@
             Use this endpoint to get the details of a specific product by its ID.
             </remarks>
         </member>
-        <member name="M:E_Commerce.API.Controllers.ProductController.SearchProduct(System.String,E_Commerce.Core.Dtos.PaginationDto)">
+        <member name="M:E_Commerce.API.Controllers.ProductController.SearchProduct(System.String,PaginationDto)">
             <summary>
             Searches for products by name with optional pagination.
             </summary>
@@ -326,7 +326,7 @@
             Use this endpoint to search for products by their name.
             </remarks>
         </member>
-        <member name="M:E_Commerce.API.Controllers.ProductController.GetProductByCategory(System.Guid,E_Commerce.Core.Dtos.PaginationDto)">
+        <member name="M:E_Commerce.API.Controllers.ProductController.GetProductByCategory(System.Guid,PaginationDto)">
             <summary>
             Retrieves a paginated list of products by category.
             </summary>
@@ -343,7 +343,7 @@
             Use this endpoint to get a paginated list of products within a specific category.
             </remarks>
         </member>
-        <member name="M:E_Commerce.API.Controllers.ProductController.GetProductByBrand(System.Guid,E_Commerce.Core.Dtos.PaginationDto)">
+        <member name="M:E_Commerce.API.Controllers.ProductController.GetProductByBrand(System.Guid,PaginationDto)">
             <summary>
             Fetches products by brand ID with pagination.
             </summary>
@@ -358,7 +358,7 @@
             <param name="range">Price range filter.</param>
             <returns>List of products within the specified price range.</returns>
         </member>
-        <member name="M:E_Commerce.API.Controllers.ProductController.GetProductByRating(System.Int32,E_Commerce.Core.Dtos.PaginationDto)">
+        <member name="M:E_Commerce.API.Controllers.ProductController.GetProductByRating(System.Int32,PaginationDto)">
             <summary>
             Fetches products by rating with pagination.
             </summary>
@@ -367,7 +367,7 @@
             <returns>Paginated list of products with the specified rating.</returns>
             
         </member>
-        <member name="M:E_Commerce.API.Controllers.ProductController.GetProductByCategoryName(System.String,E_Commerce.Core.Dtos.PaginationDto)">
+        <member name="M:E_Commerce.API.Controllers.ProductController.GetProductByCategoryName(System.String,PaginationDto)">
             <summary>
             Fetches products by Category Name with pagination.
             </summary>
@@ -375,7 +375,7 @@
             <param name="pagination">Pagination details.</param>
             <returns>Paginated list of products with the specified category.</returns>
         </member>
-        <member name="M:E_Commerce.API.Controllers.ProductController.GetProductByBrandName(System.String,E_Commerce.Core.Dtos.PaginationDto)">
+        <member name="M:E_Commerce.API.Controllers.ProductController.GetProductByBrandName(System.String,PaginationDto)">
             <summary>
             Fetches products by Brand Name with pagination.
             </summary>

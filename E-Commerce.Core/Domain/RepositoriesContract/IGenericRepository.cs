@@ -9,11 +9,7 @@ namespace E_Commerce.Core.Domain.RepositoriesContract
 {
     public interface IGenericRepository<T> where T : class
     {
-        public  Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,
-            string includeProperties = "",
-            Expression<Func<T, object>>? orderBy = null,
-            int? pageIndex = null,
-            int? pageSize = null);
+        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,string includeProperties = "",string? sortBy = null,string? sortDirection = "asc",int? pageIndex = null,int? pageSize = null);
         Task<T> GetByAsync(Expression<Func<T, bool>>? filter = null, bool isTracked = true, string includeProperties = "");
         Task<T> CreateAsync(T model);
         Task<long> CountAsync(Expression<Func<T, bool>>? filter = null);

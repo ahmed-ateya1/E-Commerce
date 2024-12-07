@@ -26,7 +26,7 @@ namespace E_Commerce.Core.Handler.ProductHandler
         public async Task<PaginatedResponse<ProductResponse>> Handle(SearchProductQuery request, CancellationToken cancellationToken)
         {
             return await _cacheService.
-                GetAsync($"SearchProduct{request.Name}{request.Pagination.PageIndex}{request.Pagination.PageSize}",
+                GetAsync($"SearchProduct{request.Name}{request.Pagination.PageIndex}{request.Pagination.PageSize}{request.Pagination.SortBy}{request.Pagination.SortDirection}",
                 async () =>
                 {
                     return await _productService
