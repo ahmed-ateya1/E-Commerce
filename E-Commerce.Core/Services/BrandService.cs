@@ -89,7 +89,7 @@ namespace E_Commerce.Core.Services
                 pageIndex = 1;
             }
             var brands = await _unitOfWork.Repository<Brand>()
-                .GetAllAsync(filter, "", null, pageIndex, pageSize);
+                .GetAllAsync(filter, "",null,pageIndex, pageSize);
 
             if (!brands.Any())
                 return [];

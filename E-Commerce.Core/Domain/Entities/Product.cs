@@ -22,7 +22,7 @@ namespace E_Commerce.Core.Domain.Entities
         public double AvgRating { get; set; }
         public long TotalReviews { get; set; }
 
-        public DateTime AddedAt { get; set; }
+        public DateTime AddedAt { get; set; } = DateTime.UtcNow;
         public Guid UserID { get; set; }
         public virtual ApplicationUser User { get; set; }
 
@@ -36,6 +36,11 @@ namespace E_Commerce.Core.Domain.Entities
         public virtual ICollection<ProductImages> ProductImages { get; set; } = [];
         public virtual ICollection<Wishlist> Wishlists { get; set; } = [];
         public virtual ICollection<Review> Reviews { get; set; } = [];
+
+        public decimal CalculteDiscountedPrice()
+        {
+            return ProductPrice - (ProductPrice * (decimal)Discount/100);
+        }
 
     }
 }

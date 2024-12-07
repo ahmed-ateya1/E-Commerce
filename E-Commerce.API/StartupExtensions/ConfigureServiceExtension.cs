@@ -98,6 +98,8 @@ namespace E_Commerce.API.StartupExtensions
             services.AddSingleton<ICacheService, CacheService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IFileServices, FileService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductImagesService, ProductImagesService>();
 
             services.AddControllers();
             services.AddEndpointsApiExplorer();

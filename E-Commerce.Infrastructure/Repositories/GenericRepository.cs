@@ -32,8 +32,10 @@ namespace E_Commerce.Infrastructure.Repositories
             return await _dbSet.AnyAsync(filter);
         }
 
-        public async Task<int> CountAsync(Expression<Func<T, bool>> filter)
+        public async Task<long> CountAsync(Expression<Func<T, bool>>? filter = null)
         {
+            if (filter == null)
+                return await _dbSet.CountAsync();
             return await _dbSet.CountAsync(filter);
         }
 
@@ -63,11 +65,11 @@ namespace E_Commerce.Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<T>> GetAllAsync(
-    Expression<Func<T, bool>>? filter = null,
-    string includeProperties = "",
-    Expression<Func<T, object>>? orderBy = null,
-    int? pageIndex = null,
-    int? pageSize = null)
+            Expression<Func<T, bool>>? filter = null,
+            string includeProperties = "",
+            Expression<Func<T, object>>? orderBy = null,
+            int? pageIndex = null,
+            int? pageSize = null)
         {
             IQueryable<T> query = _dbSet;
 
@@ -95,6 +97,7 @@ namespace E_Commerce.Infrastructure.Repositories
 
             return await query.ToListAsync();
         }
+
 
 
 
