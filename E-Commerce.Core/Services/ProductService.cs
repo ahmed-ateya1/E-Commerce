@@ -55,24 +55,18 @@ namespace E_Commerce.Core.Services
             }
         }
 
-        private async Task<ApplicationUser> GetCurrentUserAsync()
+        private async Task<ApplicationUser?> GetCurrentUserAsync()
         {
             var email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
 
             if (string.IsNullOrEmpty(email))
             {
                 _logger.LogWarning("No user is authenticated.");
-                throw new InvalidOperationException("User is not authenticated.");
+                return null;
             }
 
             var user = await _unitOfWork.Repository<ApplicationUser>()
                 .GetByAsync(x => x.Email == email);
-
-            if (user == null)
-            {
-                _logger.LogWarning("User not found: {email}", email);
-                throw new ArgumentNullException(nameof(user));
-            }
 
             return user;
         }
@@ -99,6 +93,22 @@ namespace E_Commerce.Core.Services
             }
             return category;
         }
+        private async Task HandleProductWishListAsync(IEnumerable<ProductResponse> products, Guid userId)
+        {
+            var productIds = products.Select(x => x.ProductID).ToList();
+
+            var wishlists = await _unitOfWork.Repository<Wishlist>()
+                .GetAllAsync(x => productIds.Contains(x.ProductID) && x.UserID == userId);
+
+            var wishlistProductIds = new HashSet<Guid>(wishlists.Select(x => x.ProductID));
+
+            foreach (var product in products)
+            {
+                product.ProductInWishlist = wishlistProductIds.Contains(product.ProductID);
+            }
+        }
+
+
         public async Task<ProductResponse?> CreateAsync(ProductAddRequest? request)
         {
             if (request == null)
@@ -112,6 +122,11 @@ namespace E_Commerce.Core.Services
             ValidationHelper.ValidateModel(request);
 
             var user = await GetCurrentUserAsync();
+            if (user == null)
+            {
+                _logger.LogWarning("User not found.");
+                throw new ArgumentNullException(nameof(user));
+            }
             var brand = await CheckBrandAsync(request.BrandID);
             var category = await CheckCategoryAsync(request.CategoryID);
 
@@ -202,8 +217,15 @@ namespace E_Commerce.Core.Services
                     TotalCount = 0
                 };
             }
-
+            var user = await GetCurrentUserAsync();
+            
             var productResponses = _mapper.Map<List<ProductResponse>>(products);
+
+            if (user != null)
+            {
+                _logger.LogInformation("User is authenticated. Fetching wishlist for the user.");
+                await HandleProductWishListAsync(productResponses, user.Id);
+            }
 
             _logger.LogInformation("{TotalProducts} products fetched successfully.", productResponses.Count);
 
@@ -241,7 +263,12 @@ namespace E_Commerce.Core.Services
                 _logger.LogWarning("UpdateAsync called with a null request.");
                 throw new ArgumentNullException(nameof(request));
             }
-
+            var user = await GetCurrentUserAsync();
+            if (user == null)
+            {
+                _logger.LogWarning("User not found.");
+                throw new ArgumentNullException(nameof(user));
+            }
             _logger.LogInformation("Updating product with ID: {ProductID}", request.ProductID);
 
             ValidationHelper.ValidateModel(request);

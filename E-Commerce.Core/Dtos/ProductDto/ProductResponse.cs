@@ -11,6 +11,7 @@
         public string UserName { get; set; }
         public string BrandName { get; set; }
         public string CategoryName { get; set; }
+        public bool ProductInWishlist { get; set; }
         public List<string> ProductFilesUrl { get; set; } = new List<string>();
     }
 }

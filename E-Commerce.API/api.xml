@@ -383,6 +383,100 @@
             <param name="pagination">Pagination details.</param>
             <returns>Paginated list of products with the specified Brand.</returns>
         </member>
+        <member name="T:E_Commerce.API.Controllers.TechnicalSpecificationController">
+            <summary>
+            API Controller for managing Technical Specification for product.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.TechnicalSpecificationController.AddSpecification(E_Commerce.Core.Dtos.TechnicalSpecificationDto.TechnicalSpecificationAddRequest)">
+            <summary>
+            Adds a new technical specification for a product.
+            </summary>
+            <param name="request">The request containing the details of the technical specification to add.</param>
+            <returns>An API response indicating the result of the operation.</returns>
+            <response code="200">Technical specification added successfully.</response>
+            <response code="404">Product not found.</response>
+            <response code="400">Failed to add the technical specification.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.TechnicalSpecificationController.UpdateSpecification(E_Commerce.Core.Dtos.TechnicalSpecificationDto.TechnicalSpecificationUpdateRequest)">
+            <summary>
+            Updates an existing technical specification.
+            </summary>
+            <param name="request">The request containing updated details for the technical specification.</param>
+            <returns>An API response indicating the result of the operation.</returns>
+            <response code="200">Technical specification updated successfully.</response>
+            <response code="404">Product or technical specification not found.</response>
+            <response code="400">Failed to update the technical specification.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.TechnicalSpecificationController.DeleteAsync(System.Guid)">
+            <summary>
+            Deletes a technical specification by its ID.
+            </summary>
+            <param name="id">The ID of the technical specification to delete.</param>
+            <returns>An API response indicating the result of the operation.</returns>
+            <response code="200">Technical specification deleted successfully.</response>
+            <response code="400">Failed to delete the technical specification.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.TechnicalSpecificationController.GetByAsync(System.Guid)">
+            <summary>
+            Retrieves a technical specification by its ID.
+            </summary>
+            <param name="id">The ID of the technical specification to retrieve.</param>
+            <returns>An API response containing the requested technical specification.</returns>
+            <response code="200">Technical specification retrieved successfully.</response>
+            <response code="404">Technical specification not found.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.TechnicalSpecificationController.GetAllSpecificationsForProduct(System.Guid)">
+            <summary>
+            Retrieves all technical specifications for a specific product.
+            </summary>
+            <param name="productID">The ID of the product.</param>
+            <returns>An API response containing the list of technical specifications.</returns>
+            <response code="200">Technical specifications retrieved successfully.</response>
+            <response code="404">Technical specifications not found.</response>
+        </member>
+        <member name="T:E_Commerce.API.Controllers.WishlistController">
+            <summary>
+            Controller for managing wishlist operations, such as adding, removing, and retrieving wishlist items.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.WishlistController.#ctor(E_Commerce.Core.ServicesContract.IWishlistService,Microsoft.Extensions.Logging.ILogger{E_Commerce.API.Controllers.WishlistController},E_Commerce.Core.Domain.RepositoriesContract.IUnitOfWork,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:E_Commerce.API.Controllers.WishlistController"/> class.
+            </summary>
+            <param name="wishlistService">Service for managing wishlist operations.</param>
+            <param name="logger">Logger for logging operations and errors.</param>
+            <param name="unitOfWork">Unit of work for database operations.</param>
+            <param name="httpContextAccessor">Accessor for HTTP context.</param>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.WishlistController.AddProductToWishList(E_Commerce.Core.Dtos.WishlistDto.WishlistAddRequest)">
+            <summary>
+            Adds a product to the user's wishlist.
+            </summary>
+            <param name="request">The wishlist add request containing the product details.</param>
+            <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating the result of the operation.</returns>
+            <response code="200">Product added to wishlist successfully.</response>
+            <response code="400">Failed to add product to wishlist.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.WishlistController.RemoveProductFromWishlist(System.Guid)">
+            <summary>
+            Removes a product from the user's wishlist.
+            </summary>
+            <param name="productID">The ID of the product to remove from the wishlist.</param>
+            <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating the result of the operation.</returns>
+            <response code="200">Product removed from wishlist successfully.</response>
+            <response code="400">Failed to remove product from wishlist.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.WishlistController.GetWishlist">
+            <summary>
+            Retrieves the wishlist of the authenticated user.
+            </summary>
+            <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> containing the user's wishlist.</returns>
+            <response code="200">Wishlist retrieved successfully.</response>
+            <response code="401">User is not authenticated.</response>
+            <response code="404">User not found.</response>
+            <response code="400">Failed to retrieve wishlist.</response>
+        </member>
         <member name="T:E_Commerce.API.FileServices.FileService">
             <summary>
             Provides file-related services for the application.

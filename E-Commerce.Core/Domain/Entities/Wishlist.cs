@@ -10,8 +10,7 @@ namespace E_Commerce.Core.Domain.Entities
     public class Wishlist
     {
         public Guid WishlistID { get; set; } = Guid.NewGuid();
-        public DateTime AddedAt { get; set; }
-
+        public DateTime AddedAt { get; set; } = DateTime.UtcNow;
         public Guid ProductID { get; set; }
         public virtual Product Product { get; set; }
         public Guid UserID { get; set; }
