@@ -1,9 +1,4 @@
 ﻿using E_Commerce.Core.Domain.IdentityEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace E_Commerce.Core.Domain.Entities
 {
@@ -13,7 +8,7 @@ namespace E_Commerce.Core.Domain.Entities
         public string ReviewText { get; set; }
         public int Rating { get; set; }
         public long TotalVotes { get; set; }
-        public DateTime ReviewDate { get; set; }
+        public DateTime ReviewDate { get; set; } = DateTime.UtcNow;
 
         public Guid ProductID { get; set; }
         public virtual Product Product { get; set; }
