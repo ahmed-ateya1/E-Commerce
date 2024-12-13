@@ -185,6 +185,58 @@
             <response code="404">No brands found matching the name.</response>
             <returns>An API response containing the list of brands matching the name.</returns>
         </member>
+        <member name="T:E_Commerce.API.Controllers.CartController">
+            <summary>
+            Provides endpoints for managing the shopping cart.
+            Interacts with Redis to retrieve, update, and delete cart data.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CartController.#ctor(E_Commerce.Core.ServicesContract.IRedisCartServices)">
+            <summary>
+            Initializes a new instance of the <see cref="T:E_Commerce.API.Controllers.CartController"/> class.
+            </summary>
+            <param name="redisCartServices">The service used to interact with Redis for cart operations.</param>
+            <remarks>
+            The <paramref name="redisCartServices"/> parameter is injected via dependency injection.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CartController.GetCartAsync(System.Guid)">
+            <summary>
+            Retrieves the shopping cart from Redis by its unique identifier.
+            </summary>
+            <param name="cartId">The unique identifier of the cart to be retrieved.</param>
+            <returns>
+            Returns an <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult`1"/> with the cart if found; otherwise, returns a <c>NotFound</c> result.
+            </returns>
+            <remarks>
+            If the cart does not exist in Redis, a 404 Not Found response will be returned.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CartController.UpdateCartAsync(E_Commerce.Core.Domain.Entities.Cart)">
+            <summary>
+            Updates or creates a shopping cart in Redis.
+            </summary>
+            <param name="cart">The <see cref="T:E_Commerce.Core.Domain.Entities.Cart"/> object containing the data to be updated or created in Redis.</param>
+            <returns>
+            Returns an <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult`1"/> containing the updated or created cart.
+            </returns>
+            <remarks>
+            The cart will be serialized and stored in Redis with a 30-day expiration time.
+            If the update is successful, the same cart object will be returned.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CartController.DeleteCartAsync(System.Guid)">
+            <summary>
+            Deletes a shopping cart from Redis by its unique identifier.
+            </summary>
+            <param name="cartId">The unique identifier of the cart to be deleted.</param>
+            <returns>
+            Returns an <see cref="!:ActionResult&lt;bool&gt;"/> indicating whether the cart was successfully deleted.
+            </returns>
+            <remarks>
+            If the cart does not exist or the deletion fails, this method will return <c>false</c>.
+            </remarks>
+        </member>
         <member name="T:E_Commerce.API.Controllers.CategoryController">
             <summary>
             API Controller for managing categories.
