@@ -36,7 +36,6 @@ namespace E_Commerce.Core.Domain.Entities
         public virtual ICollection<ProductImages> ProductImages { get; set; } = [];
         public virtual ICollection<Wishlist> Wishlists { get; set; } = [];
         public virtual ICollection<Review> Reviews { get; set; } = [];
-
         public decimal CalculteDiscountedPrice()
         {
             return ProductPrice - (ProductPrice * (decimal)Discount/100);

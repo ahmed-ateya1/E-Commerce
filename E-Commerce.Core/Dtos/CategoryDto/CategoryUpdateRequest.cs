@@ -8,5 +8,7 @@ namespace E_Commerce.Core.Dtos.CategoryDto
         [Required(ErrorMessage = "Category ID Can't be Blank !")]
         public Guid CategoryID { get; set; }
         public IFormFile? CategoryImage { get; set; }
+        
+        public Guid? ParentCategoryID { get; set; }
     }
 }

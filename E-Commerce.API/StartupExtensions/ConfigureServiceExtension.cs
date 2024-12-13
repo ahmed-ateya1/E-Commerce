@@ -17,6 +17,7 @@ using E_Commerce.Core.MappingProfile;
 using E_Commerce.Core.Queries.BrandQueries;
 using E_Commerce.Core.Caching;
 using E_Commerce.API.FileServices;
+using StackExchange.Redis;
 
 namespace E_Commerce.API.StartupExtensions
 {
@@ -85,6 +86,11 @@ namespace E_Commerce.API.StartupExtensions
             });
             services.AddLogging();
             services.AddDistributedMemoryCache();
+            services.AddSingleton<IConnectionMultiplexer>(x =>
+            {
+                var options = ConfigurationOptions.Parse(configuration.GetConnectionString("Redis"), true);
+                return ConnectionMultiplexer.Connect(options);
+            });
             services.AddAutoMapper(typeof(BrandConfig).Assembly);
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetAllBrandQuery).Assembly));
             services.AddHealthChecks();
@@ -104,6 +110,7 @@ namespace E_Commerce.API.StartupExtensions
             services.AddScoped<IWishlistService, WishlistService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IVoteService, VoteService>();
+            services.AddScoped<IRedisCartServices, RedisCartServices>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>

@@ -383,6 +383,62 @@
             <param name="pagination">Pagination details.</param>
             <returns>Paginated list of products with the specified Brand.</returns>
         </member>
+        <member name="M:E_Commerce.API.Controllers.ReviewController.AddReview(E_Commerce.Core.Dtos.ReviewDto.ReviewAddRequest)">
+            <summary>
+            Adds a review for a product.
+            </summary>
+            <param name="request">The review add request containing review details.</param>
+            <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating the result of the operation.</returns>
+            <response code="200">Review added successfully.</response>
+            <response code="400">Failed to add the review.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.ReviewController.UpdateReview(E_Commerce.Core.Dtos.ReviewDto.ReviewUpdateRequest)">
+            <summary>
+            Updates an existing review.
+            </summary>
+            <param name="request">The review update request containing updated review details.</param>
+            <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating the result of the operation.</returns>
+            <response code="200">Review updated successfully.</response>
+            <response code="400">Failed to update the review.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.ReviewController.DeleteReview(System.Guid)">
+            <summary>
+            Deletes a review by its ID.
+            </summary>
+            <param name="id">The ID of the review to be deleted.</param>
+            <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating the result of the operation.</returns>
+            <response code="200">Review deleted successfully.</response>
+            <response code="400">Failed to delete the review.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.ReviewController.GetReview(System.Guid)">
+            <summary>
+            Retrieves a specific review by its ID.
+            </summary>
+            <param name="id">The ID of the review to retrieve.</param>
+            <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> containing the review details.</returns>
+            <response code="200">Review retrieved successfully.</response>
+            <response code="400">Failed to retrieve the review.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.ReviewController.GetAllReviews(System.Guid,PaginationDto)">
+            <summary>
+            Retrieves all reviews for a product.
+            </summary>
+            <param name="productID">The ID of the product for which reviews are to be fetched.</param>
+            <param name="pagination">Pagination parameters for the review list.</param>
+            <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> containing the list of reviews for the product.</returns>
+            <response code="200">Reviews retrieved successfully.</response>
+            <response code="400">Failed to retrieve reviews.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.ReviewController.GetReviewReplies(System.Guid,PaginationDto)">
+            <summary>
+            Retrieves all replies to a specific review.
+            </summary>
+            <param name="reviewID">The ID of the review for which replies are to be fetched.</param>
+            <param name="pagination">Pagination parameters for the reply list.</param>
+            <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> containing the list of replies to the review.</returns>
+            <response code="200">Review replies retrieved successfully.</response>
+            <response code="400">Failed to retrieve review replies.</response>
+        </member>
         <member name="T:E_Commerce.API.Controllers.TechnicalSpecificationController">
             <summary>
             API Controller for managing Technical Specification for product.
@@ -434,6 +490,33 @@
             <returns>An API response containing the list of technical specifications.</returns>
             <response code="200">Technical specifications retrieved successfully.</response>
             <response code="404">Technical specifications not found.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.VoteController.UpVote(E_Commerce.Core.Dtos.VoteDto.VoteAddRequest)">
+            <summary>
+            Upvotes a review.
+            </summary>
+            <param name="request">The vote request containing the review ID and vote details.</param>
+            <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating the result of the upvote operation.</returns>
+            <response code="200">Upvoted successfully.</response>
+            <response code="400">Failed to upvote.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.VoteController.DownVote(E_Commerce.Core.Dtos.VoteDto.VoteAddRequest)">
+            <summary>
+            Downvotes a review.
+            </summary>
+            <param name="request">The vote request containing the review ID and vote details.</param>
+            <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating the result of the downvote operation.</returns>
+            <response code="200">Downvoted successfully.</response>
+            <response code="400">Failed to downvote.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.VoteController.GetAll(System.Guid)">
+            <summary>
+            Retrieves all votes for a specific review.
+            </summary>
+            <param name="reviewId">The ID of the review for which votes are to be fetched.</param>
+            <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> containing the list of votes for the review.</returns>
+            <response code="200">Votes retrieved successfully.</response>
+            <response code="500">An error occurred while retrieving votes.</response>
         </member>
         <member name="T:E_Commerce.API.Controllers.WishlistController">
             <summary>
