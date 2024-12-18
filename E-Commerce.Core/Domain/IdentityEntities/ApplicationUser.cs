@@ -15,5 +15,7 @@ namespace E_Commerce.Core.Domain.IdentityEntities
         public virtual ICollection<Wishlist> Wishlists { get; set; } = [];
         public virtual ICollection<Review> Reviews { get; set; } = [];
         public virtual ICollection<Vote> Votes { get; set; } = [];
+        public virtual ICollection<Order> Orders { get; set; } = [];
+        public virtual ICollection<Address> Addresses { get; set; } = [];
     }
 }

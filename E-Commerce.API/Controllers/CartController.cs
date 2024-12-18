@@ -37,7 +37,7 @@ namespace E_Commerce.API.Controllers
         /// <remarks>
         /// If the cart does not exist in Redis, a 404 Not Found response will be returned.
         /// </remarks>
-        [HttpGet]
+        [HttpGet("getCart/{cartId}")]
         public async Task<ActionResult<Cart>> GetCartAsync(Guid cartId)
         {
             var cart = await _redisCartServices.GetCartAsync(cartId);
@@ -59,7 +59,7 @@ namespace E_Commerce.API.Controllers
         /// The cart will be serialized and stored in Redis with a 30-day expiration time.
         /// If the update is successful, the same cart object will be returned.
         /// </remarks>
-        [HttpPost]
+        [HttpPost("updateOrCreateCart")]
         public async Task<ActionResult<Cart>> UpdateCartAsync(Cart cart)
         {
             var updatedCart = await _redisCartServices.UpdateCartAsync(cart);
@@ -81,6 +81,7 @@ namespace E_Commerce.API.Controllers
         /// If the cart does not exist or the deletion fails, this method will return <c>false</c>.
         /// </remarks>
         [HttpDelete]
+        [Route("deleteCart/{cartId}")]
         public async Task<ActionResult<bool>> DeleteCartAsync(Guid cartId)
         {
             var result = await _redisCartServices.DeleteCartAsync(cartId);

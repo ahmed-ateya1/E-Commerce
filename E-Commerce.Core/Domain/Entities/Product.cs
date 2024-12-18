@@ -31,11 +31,14 @@ namespace E_Commerce.Core.Domain.Entities
 
         public Guid CategoryID { get; set; }
         public virtual Category Category { get; set; }
+        public Guid OrderItemID { get; set; }
+        public virtual OrderItem OrderItem { get; set; }
 
         public virtual ICollection<TechnicalSpecification> TechnicalSpecifications { get; set; } = [];
         public virtual ICollection<ProductImages> ProductImages { get; set; } = [];
         public virtual ICollection<Wishlist> Wishlists { get; set; } = [];
         public virtual ICollection<Review> Reviews { get; set; } = [];
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = [];
         public decimal CalculteDiscountedPrice()
         {
             return ProductPrice - (ProductPrice * (decimal)Discount/100);
