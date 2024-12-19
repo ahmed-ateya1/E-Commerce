@@ -3,6 +3,6 @@
     public class Cart
     {
         public Guid CartID { get; set; } = Guid.NewGuid();
-        public List<CartItems> CartItems { get; set; } = new();
+        public List<CartItems> CartItems { get; set; } = [];
     }
 }

@@ -16,7 +16,7 @@ public class ProductConfig : Profile
             .ForMember(x => x.BrandName, opt => opt.MapFrom(x => x.Brand != null ? x.Brand.BrandName : string.Empty))
             .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category != null ? x.Category.CategoryName : string.Empty))
             .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.User != null ? x.User.UserName : string.Empty))
-            .ForMember(x => x.ProductPriceAfterDiscount, opt => opt.MapFrom(x => x.CalculteDiscountedPrice()))
+            .ForMember(x => x.ProductPriceAfterDiscount, opt => opt.MapFrom(x => x.CalculateDiscountedPrice()))
             .ForMember(x=>x.ProductFilesUrl, opt => opt.MapFrom(x => x.ProductImages.Select(p => p.ImageURL).ToList()));
     }
 }

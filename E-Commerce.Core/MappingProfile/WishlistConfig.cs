@@ -12,7 +12,7 @@ namespace E_Commerce.Core.MappingProfile
             CreateMap<WishlistUpdateRequest, Wishlist>();
             CreateMap<Wishlist, WishlistResponse>()
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))
-                .ForMember(dest=>dest.ProductPrice, opt=> opt.MapFrom(src => src.Product.CalculteDiscountedPrice()))
+                .ForMember(dest=>dest.ProductPrice, opt=> opt.MapFrom(src => src.Product.CalculateDiscountedPrice()))
 .ForMember(dest => dest.ProductImageURL, opt => opt.MapFrom(src => src.Product.ProductImages.FirstOrDefault().ImageURL))
                 .ForMember(dest=>dest.ProductDescription, opt => opt.MapFrom(src => src.Product.ProductDescription))
                 .ForMember(dest => dest.CategoryID, opt => opt.MapFrom(src => src.Product.CategoryID))

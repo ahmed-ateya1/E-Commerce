@@ -25,7 +25,14 @@ namespace E_Commerce.Infrastructure.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Vote> Votes { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
-            
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
+
+
+
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
