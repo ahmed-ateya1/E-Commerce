@@ -2,7 +2,7 @@
 {
     public class OrderItem
     {
-        public Guid OrderItemID { get; set; }
+        public Guid OrderItemID { get; set; } = Guid.NewGuid();
         public int Quantity { get; set; }
         public decimal Price { get; set; }
         public Guid OrderID { get; set; }

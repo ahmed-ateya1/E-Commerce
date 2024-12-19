@@ -302,6 +302,171 @@
             <response code="200">Category deleted successfully.</response>
             <response code="400">Failed to delete the category.</response>
         </member>
+        <member name="M:E_Commerce.API.Controllers.DeliveryMethodController.AddDeliveryMethodAsync(E_Commerce.Core.Dtos.DeliveryMethodDto.DeliveryMethodAddRequest)">
+            <summary>
+            Adds a new delivery method.
+            </summary>
+            <param name="request">An object of type <see cref="T:E_Commerce.Core.Dtos.DeliveryMethodDto.DeliveryMethodAddRequest"/> containing the details for the new delivery method to be added.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> with status code 200 (OK) if the delivery method is successfully added.
+            If the creation fails, returns a 400 (Bad Request) with an error message.
+            </returns>
+            <remarks>
+            This method is used to add a new delivery method to the system. It uses the <see cref="T:E_Commerce.Core.ServicesContract.IDeliveryMethodServices"/> to handle the creation logic. 
+            A success message is returned if the delivery method is added, otherwise, an error message is returned.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.DeliveryMethodController.UpdateDeliveryMethodAsync(E_Commerce.Core.Dtos.DeliveryMethodDto.DeliveryMethodUpdateRequest)">
+            <summary>
+            Updates an existing delivery method.
+            </summary>
+            <param name="request">An object of type <see cref="T:E_Commerce.Core.Dtos.DeliveryMethodDto.DeliveryMethodUpdateRequest"/> containing the details for the delivery method to be updated.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> with status code 200 (OK) if the delivery method is successfully updated.
+            If the update fails, returns a 400 (Bad Request) with an error message.
+            </returns>
+            <remarks>
+            This method is used to update the details of an existing delivery method. It uses the <see cref="T:E_Commerce.Core.ServicesContract.IDeliveryMethodServices"/> to handle the update logic.
+            A success message is returned if the update is successful, otherwise, an error message is returned.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.DeliveryMethodController.DeleteDeliveryMethodAsync(System.Guid)">
+            <summary>
+            Deletes a specific delivery method by its ID.
+            </summary>
+            <param name="id">The unique identifier of the delivery method to delete.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> with status code 200 (OK) if the delivery method is successfully deleted.
+            If the deletion fails, returns a 400 (Bad Request) with an error message.
+            </returns>
+            <remarks>
+            This method deletes a delivery method by its ID from the system.
+            A success message is returned if the delivery method is deleted, otherwise, an error message is returned.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.DeliveryMethodController.GetDeliveryMethodAsync(System.Guid)">
+            <summary>
+            Retrieves the details of a specific delivery method by its ID.
+            </summary>
+            <param name="id">The unique identifier of the delivery method to retrieve.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> with status code 200 (OK) and the details of the delivery method if found.
+            If the delivery method is not found, returns a 404 (Not Found) with an error message.
+            </returns>
+            <remarks>
+            This method retrieves the details of the delivery method with the specified ID.
+            If the delivery method is found, its details are returned, otherwise a 404 (Not Found) response is returned.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.DeliveryMethodController.GetAllDeliveryMethodsAsync">
+            <summary>
+            Retrieves all delivery methods in the system.
+            </summary>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> with status code 200 (OK) and a list of all delivery methods if found.
+            If no delivery methods are found, returns a 404 (Not Found) with an error message.
+            </returns>
+            <remarks>
+            This method fetches all delivery methods from the system.
+            If no delivery methods are found, a 404 (Not Found) response is returned.
+            Otherwise, the list of delivery methods is returned within an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> with a success message.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.OrderController.AddOrder(E_Commerce.Core.Dtos.OrderDto.OrderAddRequest)">
+            <summary>
+            Adds a new order based on the provided request data.
+            </summary>
+            <param name="request">An object of type <see cref="T:E_Commerce.Core.Dtos.OrderDto.OrderAddRequest"/> containing the details for the new order to be added. 
+            This includes the user's address ID, delivery method ID, and a list of items in the order.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating success or failure. 
+            If the order creation fails, a BadRequest response is returned, otherwise the created order details are returned.
+            </returns>
+            <remarks>
+            This method validates the order request and uses the <see cref="!:OrderServices"/> to create the order. 
+            The order details are then saved in the system and returned in the response.
+            </remarks>
+            <response code="200">Order added successfully.</response>
+            <response code="400">Failed to add the Order or invalid data.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.OrderController.UpdateOrderStatus(System.Guid,E_Commerce.Core.Helper.OrderStatus)">
+            <summary>
+            Updates the status of an existing order.
+            </summary>
+            <param name="orderID">The unique identifier of the order to update.</param>
+            <param name="orderStatus">An object containing the new status to be applied to the order.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating success or failure of the operation.
+            A BadRequest response is returned if the update fails, otherwise a success message is returned.
+            </returns>
+            <remarks>
+            This method updates the order status based on the provided order ID. 
+            If the order status update is successful, a success message is returned.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.OrderController.DeleteOrder(System.Guid)">
+            <summary>
+            Deletes a specific order by its ID.
+            </summary>
+            <param name="orderId">The unique identifier of the order to delete.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating the result of the operation.
+            A BadRequest response is returned if the deletion fails, otherwise a success message is returned.
+            </returns>
+            <remarks>
+            This method deletes the order with the given ID from the system.
+            If the deletion is successful, a success message is returned; otherwise, an error message is returned.
+            </remarks>
+            <response code="200">Order deleted successfully.</response>
+            <response code="400">Failed to delete the order.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.OrderController.GetOrder(System.Guid)">
+            <summary>
+            Retrieves the details of a specific order by its ID.
+            </summary>
+            <param name="orderId">The unique identifier of the order to retrieve.</param>
+            <returns>
+            Returns the details of the order if found, or a NotFound response if the order does not exist.
+            </returns>
+            <remarks>
+            This method retrieves the details of the order with the specified ID. 
+            If the order exists, its details are returned in the response, otherwise a NotFound response is returned.
+            </remarks>
+            <response code="200">Fetched order successfully.</response>
+            <response code="404">Order Not found.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.OrderController.GetOrders">
+            <summary>
+            Retrieves all orders in the system.
+            </summary>
+            <returns>
+            Returns a list of all orders if found, or a NotFound response if no orders exist.
+            </returns>
+            <remarks>
+            This method fetches all orders from the system and returns them in a list. 
+            If no orders are found, a NotFound response is returned. 
+            Otherwise, the orders are returned within an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> with a success message.
+            </remarks>
+            <response code="200">Fetched orders successfully.</response>
+            <response code="404">Orders Not found.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.OrderController.GetOrdersByUser">
+            <summary>
+            Retrieves a list of orders associated with the currently authenticated user.
+            </summary>
+            <remarks>
+            This method retrieves the user's email from the HTTP context and finds the corresponding user in the database. 
+            It then attempts to fetch all orders related to the user's ID. If the user or orders are not found, appropriate responses are returned.
+            </remarks>
+            <param name="email">The email address of the currently authenticated user, retrieved from the HTTP context.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> with a list of orders if found. 
+            If no user or orders are found, a <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> with an error message and the corresponding HTTP status code is returned.
+            </returns>
+            <response code="200">Order added successfully.</response>
+            <response code="400">Failed to add the Order or invalid data.</response>
+            <response code="401">User is not authenticated.</response>
+        </member>
         <member name="M:E_Commerce.API.Controllers.ProductController.AddProduct(E_Commerce.Core.Dtos.ProductDto.ProductAddRequest)">
             <summary>
             Adds a new product.

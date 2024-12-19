@@ -4,7 +4,7 @@ namespace E_Commerce.Core.Domain.Entities
 {
     public class Address
     {
-        public Guid AddressID { get; set; }
+        public Guid AddressID { get; set; } = Guid.NewGuid();
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Street { get; set; }

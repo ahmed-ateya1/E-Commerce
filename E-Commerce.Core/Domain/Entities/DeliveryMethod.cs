@@ -2,7 +2,7 @@
 {
     public class DeliveryMethod
     {
-        public Guid DeliveryMethodID { get; set; }
+        public Guid DeliveryMethodID { get; set; } = Guid.NewGuid();
         public string ShortName { get; set; }
         public string DeliveryTime { get; set; }
         public string Description { get; set; }

@@ -14,7 +14,7 @@ namespace E_Commerce.Core.Dtos.OrderDto
         public Guid UserID { get; set; }
         public string UserName { get; set; } 
         public Guid AddressID { get; set; }
-        public AddressResponseDto Address { get; set; }
+        public AddressResponse Address { get; set; }
         public Guid DeliveryMethodID { get; set; }
         public DeliveryMethodResponse DeliveryMethod { get; set; }
         public List<OrderItemResponse> OrderItems { get; set; } 

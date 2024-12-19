@@ -1,6 +1,6 @@
 ﻿namespace E_Commerce.Core.Dtos.AddressDto
 {
-    public class AddressResponseDto
+    public class AddressResponse
     {
         public Guid AddressID { get; set; }
         public string Street { get; set; }

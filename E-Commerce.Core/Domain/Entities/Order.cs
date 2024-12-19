@@ -4,7 +4,7 @@ using E_Commerce.Core.Helper;
 
 public class Order
 {
-    public Guid OrderID { get; set; }
+    public Guid OrderID { get; set; } = Guid.NewGuid();
     public string OrderNumber { get; set; }
     public DateTime OrderDate { get; set; } = DateTime.UtcNow;
     public decimal SubTotal { get; set; }
