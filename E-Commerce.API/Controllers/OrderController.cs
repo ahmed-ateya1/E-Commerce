@@ -19,15 +19,11 @@ namespace E_Commerce.API.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
 
-        public OrderController(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
-
-        public OrderController(IOrderServices orderServices, IHttpContextAccessor httpContextAccessor)
+        public OrderController(IOrderServices orderServices, IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
         {
             _orderServices = orderServices;
             _httpContextAccessor = httpContextAccessor;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>

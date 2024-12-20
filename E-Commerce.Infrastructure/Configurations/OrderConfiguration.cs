@@ -11,8 +11,7 @@ namespace E_Commerce.Infrastructure.Configurations
             builder.Property(x => x.OrderID)
                 .ValueGeneratedNever();
             builder.Property(x => x.OrderNumber)
-                .IsRequired()
-                .HasMaxLength(12);
+                .IsRequired();
             builder.Property(x => x.OrderDate)
                 .IsRequired();
             builder.Property(x => x.SubTotal)

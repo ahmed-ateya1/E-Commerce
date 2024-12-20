@@ -113,6 +113,7 @@ namespace E_Commerce.API.StartupExtensions
             services.AddScoped<IRedisCartServices, RedisCartServices>();
             services.AddScoped<IOrderServices , OrderServices>();
             services.AddScoped<IDeliveryMethodServices, DeliveryMethodServices>();
+            services.AddScoped<IAddressServices, AddressServices>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>

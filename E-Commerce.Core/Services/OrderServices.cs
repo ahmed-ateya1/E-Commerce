@@ -80,6 +80,7 @@ namespace E_Commerce.Core.Services
                 _logger.LogError("Order request is null.");
                 throw new ArgumentNullException(nameof(orderRequest));
             }
+
             var user = await GetCurrentUserAsync();
             var address = await _unitOfWork.Repository<Address>()
                 .GetByAsync(x => x.AddressID == orderRequest.AddressID);
@@ -96,6 +97,7 @@ namespace E_Commerce.Core.Services
                 _logger.LogError("Delivery method not found.");
                 throw new KeyNotFoundException("Delivery method not found.");
             }
+
             var order = _mapper.Map<Order>(orderRequest);
             order.UserID = user.Id;
             order.User = user;
@@ -104,7 +106,6 @@ namespace E_Commerce.Core.Services
             order.DeliveryMethodID = deliveryMethod.DeliveryMethodID;
             order.DeliveryMethod = deliveryMethod;
             order.OrderNumber = OrderNumberGeneratorHelper.GenerateOrderNumber(order.UserID);
-
 
             var orderItems = new List<OrderItem>();
 
@@ -124,12 +125,14 @@ namespace E_Commerce.Core.Services
                     _logger.LogError($"Insufficient stock for product {product.ProductName}. Requested: {orderItemRequest.Quantity}, Available: {product.StockQuantity}");
                     throw new InvalidOperationException($"Insufficient stock for product {product.ProductName}.");
                 }
+                product.StockQuantity -= orderItemRequest.Quantity;
+                await _unitOfWork.Repository<Product>().UpdateAsync(product);
 
                 var orderItem = _mapper.Map<OrderItem>(orderItemRequest);
-                orderItem.Price = product.ProductPrice; 
+                orderItem.Price = product.ProductPrice;
+                orderItem.Product = product;
                 orderItems.Add(orderItem);
             }
-
 
             order.OrderItems = orderItems;
             order.SubTotal = orderItems.Sum(x => x.Price * x.Quantity);
@@ -137,10 +140,12 @@ namespace E_Commerce.Core.Services
             await ExecuteWithTransactionAsync(async () =>
             {
                 await _unitOfWork.Repository<Order>().CreateAsync(order);
+                await _unitOfWork.CompleteAsync();
             });
 
             return _mapper.Map<OrderResponse>(order);
         }
+
 
 
         public async Task<bool> DeleteAsync(Guid id)

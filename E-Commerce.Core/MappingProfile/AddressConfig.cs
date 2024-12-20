@@ -11,7 +11,8 @@ namespace E_Commerce.Core.MappingProfile
             CreateMap<AddressAddRequest, Address>()
                 .ReverseMap();
             CreateMap<Address, AddressResponse>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
                 .ReverseMap();
 
         }

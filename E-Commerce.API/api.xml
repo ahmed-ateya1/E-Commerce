@@ -117,6 +117,74 @@
             <param name="refreshToken">The refresh token string.</param>
             <param name="expires">The expiration time for the token.</param>
         </member>
+        <member name="M:E_Commerce.API.Controllers.AddressDeliveryController.AddAddressDeliveryAsync(E_Commerce.Core.Dtos.AddressDto.AddressAddRequest)">
+            <summary>
+            Adds a new address delivery.
+            </summary>
+            <param name="request">The address delivery details to be added.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating success or failure of the operation.
+            </returns>
+            <remarks>
+            **HTTP Status Codes**:
+            - 200 OK: If the address delivery was added successfully.
+            - 400 BadRequest: If the address delivery could not be added.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AddressDeliveryController.GetAddressDeliveryAsync(System.Guid)">
+            <summary>
+            Retrieves a specific address delivery by its ID.
+            </summary>
+            <param name="addressId">The unique identifier of the address delivery.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> containing the address delivery details.
+            </returns>
+            <remarks>
+            **HTTP Status Codes**:
+            - 200 OK: If the address delivery was retrieved successfully.
+            - 400 BadRequest: If the address delivery could not be retrieved.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AddressDeliveryController.GetAllAddressDeliveryAsync">
+            <summary>
+            Retrieves all address deliveries.
+            </summary>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> containing a list of all address deliveries.
+            </returns>
+            <remarks>
+            **HTTP Status Codes**:
+            - 200 OK: If all address deliveries were retrieved successfully.
+            - 400 BadRequest: If the retrieval failed.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AddressDeliveryController.GetAddressDeliveryByUserAsync">
+            <summary>
+            Retrieves all address deliveries for the authenticated user.
+            </summary>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> containing the address deliveries for the user.
+            </returns>
+            <remarks>
+            **HTTP Status Codes**:
+            - 200 OK: If the address deliveries were retrieved successfully.
+            - 400 BadRequest: If the retrieval failed or the user is not authenticated.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.AddressDeliveryController.DeleteAddressDeliveryAsync(System.Guid)">
+            <summary>
+            Deletes a specific address delivery by its ID.
+            </summary>
+            <param name="addressId">The unique identifier of the address delivery.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating success or failure of the operation.
+            </returns>
+            <remarks>
+            **HTTP Status Codes**:
+            - 200 OK: If the address delivery was deleted successfully.
+            - 400 BadRequest: If the address delivery could not be deleted.
+            </remarks>
+        </member>
         <member name="T:E_Commerce.API.Controllers.BrandController">
             <summary>
             Controller to manage brand-related operations in the E-Commerce system.
