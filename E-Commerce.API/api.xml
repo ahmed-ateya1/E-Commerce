@@ -333,6 +333,21 @@
             <response code="200">Parent categories retrieved successfully.</response>
             <response code="400">Failed to retrieve parent categories.</response>
         </member>
+        <member name="M:E_Commerce.API.Controllers.CategoryController.GetAllSubCategories">
+            <summary>
+            Retrieves all Subcategories.
+            </summary>
+            <remarks>
+            This endpoint fetches a list of all Subcategories available in the system.
+            </remarks>
+            <returns>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/> containing an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/>:
+            - If successful, the response will include the list of Subcategories, a success message, and a status code of 200 (OK).
+            - If unsuccessful, the response will include a failure message and a status code of 400 (Bad Request).
+            </returns>
+            <response code="200">Subcategories retrieved successfully.</response>
+            <response code="400">Failed to retrieve Subcategories.</response>
+        </member>
         <member name="M:E_Commerce.API.Controllers.DeliveryMethodController.AddDeliveryMethodAsync(E_Commerce.Core.Dtos.DeliveryMethodDto.DeliveryMethodAddRequest)">
             <summary>
             Adds a new delivery method.
@@ -437,7 +452,7 @@
         </member>
         <member name="M:E_Commerce.API.Controllers.OrderController.DeleteOrder(System.Guid)">
             <summary>
-            Deletes a specific order by its ID.
+            Deletes a specific order by its ID When the order is not Completed or Shipped.
             </summary>
             <param name="orderId">The unique identifier of the order to delete.</param>
             <returns>
@@ -497,6 +512,53 @@
             <response code="200">Order added successfully.</response>
             <response code="400">Failed to add the Order or invalid data.</response>
             <response code="401">User is not authenticated.</response>
+        </member>
+        <member name="T:E_Commerce.API.Controllers.PaymentController">
+            <summary>
+            Controller for handling payment-related events and actions.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.PaymentController.#ctor(Microsoft.Extensions.Logging.ILogger{E_Commerce.API.Controllers.PaymentController},E_Commerce.Core.ServicesContract.IOrderServices,E_Commerce.Core.Domain.RepositoriesContract.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:E_Commerce.API.Controllers.PaymentController"/> class.
+            </summary>
+            <param name="logger">The logger instance for logging information and errors.</param>
+            <param name="orderServices">The service for managing orders.</param>
+            <param name="unitOfWork">The unit of work for handling database operations.</param>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.PaymentController.Handle">
+            <summary>
+            Handles Stripe webhook events.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating the result of the operation.</returns>
+            <remarks>
+            This endpoint listens for Stripe webhook events such as payment succeeded, payment failed, or charge refunded.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.PaymentController.GetOrder(System.String)">
+            <summary>
+            Retrieves the order associated with a specific payment intent ID.
+            </summary>
+            <param name="paymentIntentId">The ID of the payment intent.</param>
+            <returns>The <see cref="T:Order"/> associated with the payment intent.</returns>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.PaymentController.HandlePaymentSucceeded(Stripe.Event)">
+            <summary>
+            Handles the "payment_intent.succeeded" event from Stripe.
+            </summary>
+            <param name="stripeEvent">The Stripe event containing the payment intent details.</param>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.PaymentController.HandlePaymentFailed(Stripe.Event)">
+            <summary>
+            Handles the "payment_intent.payment_failed" event from Stripe.
+            </summary>
+            <param name="stripeEvent">The Stripe event containing the payment intent details.</param>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.PaymentController.HandleChargeRefunded(Stripe.Event)">
+            <summary>
+            Handles the "charge.refunded" event from Stripe.
+            </summary>
+            <param name="stripeEvent">The Stripe event containing the refund details.</param>
         </member>
         <member name="M:E_Commerce.API.Controllers.ProductController.AddProduct(E_Commerce.Core.Dtos.ProductDto.ProductAddRequest)">
             <summary>

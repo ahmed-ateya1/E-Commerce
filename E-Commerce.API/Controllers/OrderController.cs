@@ -80,7 +80,17 @@ namespace E_Commerce.API.Controllers
         [Authorize]
         public async Task<ActionResult<ApiResponse>> UpdateOrderStatus(Guid orderID, [FromBody] OrderStatus orderStatus)
         {
-            var response = await _orderServices.UpdateAsync(orderID, orderStatus);
+            var order = await _unitOfWork.Repository<Order>()
+                .GetByAsync(x => x.OrderID == orderID);
+            if (order == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Message = "Order not found",
+                    StatusCode = HttpStatusCode.NotFound
+                });
+            }
+            var response = await _orderServices.UpdateAsync(order, orderStatus);
             if (!response.IsSuccess)
             {
                 return BadRequest(new ApiResponse
@@ -98,7 +108,7 @@ namespace E_Commerce.API.Controllers
             });
         }
         /// <summary>
-        /// Deletes a specific order by its ID.
+        /// Deletes a specific order by its ID When the order is not Completed or Shipped.
         /// </summary>
         /// <param name="orderId">The unique identifier of the order to delete.</param>
         /// <returns>

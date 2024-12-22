@@ -1,7 +1,9 @@
-﻿using E_Commerce.Core.ServicesContract;
+﻿using E_Commerce.Core.Dtos;
+using E_Commerce.Core.ServicesContract;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Stripe;
+using System.Net;
 
 namespace E_Commerce.Core.Services
 {
@@ -43,6 +45,48 @@ namespace E_Commerce.Core.Services
 
             _logger.LogInformation("Payment intent created with ID {PaymentIntentId}.", paymentIntent.Id);
             return paymentIntent;
+        }
+
+        public async Task<ServiceResponse> ProcessRefund(string paymentIntentId)
+        {
+            try
+            {
+                _logger.LogInformation("Attempting to process refund for PaymentIntent ID: {PaymentIntentId}", paymentIntentId);
+
+                var refund = await RefundPayment(paymentIntentId);
+
+                _logger.LogInformation("Refund successfully processed for PaymentIntent ID: {PaymentIntentId}", paymentIntentId);
+
+                return new ServiceResponse
+                {
+                    IsSuccess = true,
+                    Message = "Refund processed successfully.",
+                    Result = refund,
+                    StatusCode = HttpStatusCode.OK
+                };
+            }
+            catch (StripeException ex)
+            {
+                _logger.LogError(ex, "Failed to process refund for PaymentIntent ID: {PaymentIntentId}", paymentIntentId);
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = $"Refund failed: {ex.Message}",
+                    Result = null,
+                    StatusCode = HttpStatusCode.BadRequest
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred during refund processing for PaymentIntent ID: {PaymentIntentId}", paymentIntentId);
+                return new ServiceResponse
+                {
+                    IsSuccess = false,
+                    Message = "An unexpected error occurred while processing the refund.",
+                    Result = null,
+                    StatusCode = HttpStatusCode.InternalServerError
+                };
+            }
         }
 
         public async Task<Refund> RefundPayment(string paymentIntentId)

@@ -55,8 +55,8 @@ namespace E_Commerce.Core.Caching
                 // Configure cache expiration options
                 var options = new DistributedCacheEntryOptions
                 {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1), // Cache expires after 1 hour
-                    SlidingExpiration = TimeSpan.FromMinutes(30) // Reset expiration if accessed within 30 minutes
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(2),
+                    SlidingExpiration = TimeSpan.FromSeconds(1)
                 };
 
                 await _distributedCache.SetStringAsync(key, cacheValue, options, cancellationToken);

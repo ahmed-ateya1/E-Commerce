@@ -36,7 +36,7 @@ namespace E_Commerce.API.StartupExtensions
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(configuration.GetConnectionString("Hosting"));
             });
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {

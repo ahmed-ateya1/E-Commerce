@@ -6,24 +6,22 @@ using MediatR;
 
 namespace E_Commerce.Core.Handler.CategoryHandler
 {
-    public class GetAllCategoryQueryHandler : IRequestHandler<GetAllCategoryQuery, IEnumerable<CategoryResponse>>
+    public class GetAllSubCategoryQueryHandler : IRequestHandler<GetAllSubCategoryQuery, IEnumerable<CategoryResponse>>
     {
         private readonly ICacheService _cacheService;
         private readonly ICategoryService _categoryService;
 
-        public GetAllCategoryQueryHandler(ICacheService cacheService,
-            ICategoryService categoryService)
+        public GetAllSubCategoryQueryHandler(ICacheService cacheService, ICategoryService categoryService)
         {
             _cacheService = cacheService;
             _categoryService = categoryService;
         }
 
-        public async Task<IEnumerable<CategoryResponse>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CategoryResponse>> Handle(GetAllSubCategoryQuery request, CancellationToken cancellationToken)
         {
-
-            return await _cacheService.GetAsync($"Categories", async () =>
+            return await _cacheService.GetAsync($"AllSubCategories", async () =>
             {
-                return await _categoryService.GetAllAsync(request.Filter);
+                return await _categoryService.GetAllAsync(x => x.ParentCategoryID != null);
             }, cancellationToken);
         }
     }

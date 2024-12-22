@@ -183,7 +183,7 @@ namespace E_Commerce.Core.Services
         public async Task<ServiceResponse> DeleteAsync(Guid id)
         {
             var order = await _unitOfWork.Repository<Order>()
-                .GetByAsync(x => x.OrderID == id ,includeProperties: "OrderItems");
+                .GetByAsync(x => x.OrderID == id, includeProperties: "OrderItems");
 
             if (order == null)
             {
@@ -196,22 +196,62 @@ namespace E_Commerce.Core.Services
                     StatusCode = HttpStatusCode.NotFound
                 };
             }
+            if (order.OrderStatus == OrderStatus.Completed)
+            {
+                _logger.LogError("Cannot delete a completed order.");
+                return new ServiceResponse
+                {
+                    Message = "Cannot delete a completed order.",
+                    IsSuccess = false,
+                    Result = null,
+                    StatusCode = HttpStatusCode.BadRequest
+                };
+            }
+
             await ExecuteWithTransactionAsync(async () =>
             {
+                order.OrderStatus = OrderStatus.Cancelled;
+                await _unitOfWork.Repository<Order>().UpdateAsync(order);
+
+                if (!string.IsNullOrEmpty(order.PaymentIntentID))
+                {
+                    var refundResult = await _paymentService.ProcessRefund(order.PaymentIntentID);
+
+                    if (!refundResult.IsSuccess)
+                    {
+                        throw new Exception($"Refund failed: {refundResult.Message}");
+                    }
+                    _logger.LogInformation($"Refund processed successfully for Order ID: {id}");
+                }
+
+                foreach (var orderItem in order.OrderItems)
+                {
+                    var product = await _unitOfWork.Repository<Product>()
+                        .GetByAsync(x => x.ProductID == orderItem.ProductID);
+
+                    if (product != null)
+                    {
+                        product.StockQuantity += orderItem.Quantity;
+                        await _unitOfWork.Repository<Product>().UpdateAsync(product);
+                    }
+                }
                 if (order.OrderItems.Any())
                 {
-                   await _unitOfWork.Repository<OrderItem>().RemoveRangeAsync(order.OrderItems);
+                    await _unitOfWork.Repository<OrderItem>().RemoveRangeAsync(order.OrderItems);
                 }
+
                 await _unitOfWork.Repository<Order>().DeleteAsync(order);
             });
+
             return new ServiceResponse
             {
                 Result = true,
                 IsSuccess = true,
-                Message = "Order deleted successfully.",
+                Message = "Order cancelled and deleted successfully. Refund processed.",
                 StatusCode = HttpStatusCode.OK
             };
         }
+
 
         public async Task<ServiceResponse> GetAllAsync(Expression<Func<Order, bool>>? filter = null)
         {
@@ -269,16 +309,16 @@ namespace E_Commerce.Core.Services
             };
         }
 
-        public async Task<ServiceResponse> UpdateAsync(Guid orderID, OrderStatus orderStatus)
+        public async Task<ServiceResponse> UpdateAsync(Order order , OrderStatus orderStatus)
         {
-            var order = await _unitOfWork.Repository<Order>()
-                .GetByAsync(x => x.OrderID == orderID);
+            var orderRes = await _unitOfWork.Repository<Order>()
+                .GetByAsync(x => x.OrderID == order.OrderID);
             if (order == null)
             {
-                _logger.LogError($"Order with ID {orderID} not found.");
+                _logger.LogError($"Order with ID {order.OrderID} not found.");
                 return new ServiceResponse
                 {
-                    Message = $"Order with ID {orderID} not found.",
+                    Message = $"Order with ID {order.OrderID} not found.",
                     IsSuccess = false,
                     Result = null,
                     StatusCode = HttpStatusCode.NotFound

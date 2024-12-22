@@ -8,7 +8,7 @@ namespace E_Commerce.Core.ServicesContract
     public interface IOrderServices
     {
         Task<ServiceResponse> CreateAsync(OrderAddRequest? orderRequest);
-        Task<ServiceResponse> UpdateAsync(Guid orderID , OrderStatus orderStatus);
+        Task<ServiceResponse> UpdateAsync(Order order, OrderStatus orderStatus);
         Task<ServiceResponse> DeleteAsync(Guid id);
         Task<ServiceResponse> GetByAsync(Expression<Func<Order, bool>> filter, bool isTracked = false);
         Task<ServiceResponse> GetAllAsync(Expression<Func<Order, bool>>? filter = null);

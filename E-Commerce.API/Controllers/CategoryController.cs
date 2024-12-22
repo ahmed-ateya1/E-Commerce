@@ -241,6 +241,41 @@ namespace E_Commerce.API.Controllers
                 StatusCode = HttpStatusCode.BadRequest
             });
         }
+        /// <summary>
+        /// Retrieves all Subcategories.
+        /// </summary>
+        /// <remarks>
+        /// This endpoint fetches a list of all Subcategories available in the system.
+        /// </remarks>
+        /// <returns>
+        /// An <see cref="ActionResult"/> containing an <see cref="ApiResponse"/>:
+        /// - If successful, the response will include the list of Subcategories, a success message, and a status code of 200 (OK).
+        /// - If unsuccessful, the response will include a failure message and a status code of 400 (Bad Request).
+        /// </returns>
+        /// <response code="200">Subcategories retrieved successfully.</response>
+        /// <response code="400">Failed to retrieve Subcategories.</response>
+        [HttpGet("getAllSubCategories")]
+        public async Task<ActionResult<ApiResponse>> GetAllSubCategories()
+        {
+            _logger.LogInformation("Attempting to get all sub categories");
+            var response = await _mediator.Send(new GetAllSubCategoryQuery());
+            if (response != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Result = response,
+                    Message = "Sub Categories retrieved successfully.",
+                    IsSuccess = true,
+                    StatusCode = HttpStatusCode.OK
+                });
+            }
+            return BadRequest(new ApiResponse
+            {
+                Message = "Failed to retrieve sub categories.",
+                IsSuccess = false,
+                StatusCode = HttpStatusCode.BadRequest
+            });
+        }
 
     }
 }

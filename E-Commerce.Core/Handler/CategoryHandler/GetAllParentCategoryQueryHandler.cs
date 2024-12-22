@@ -19,7 +19,7 @@ namespace E_Commerce.Core.Handler.CategoryHandler
 
         public async Task<IEnumerable<CategoryResponse>> Handle(GetAllParentCategoryQuery request, CancellationToken cancellationToken)
         {
-            return await _cacheService.GetAsync("AllParent", async () =>
+            return await _cacheService.GetAsync($"AllParent", async () =>
             {
                 return await _categoryService.GetAllAsync(x => x.ParentCategoryID == null);
             }, cancellationToken);
