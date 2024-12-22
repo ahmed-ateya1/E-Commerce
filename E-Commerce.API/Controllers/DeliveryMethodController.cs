@@ -1,6 +1,9 @@
-﻿using E_Commerce.Core.Dtos;
+﻿using E_Commerce.Core.Commands.DeliveryMethodCommand;
+using E_Commerce.Core.Dtos;
 using E_Commerce.Core.Dtos.DeliveryMethodDto;
+using E_Commerce.Core.Queries.DeliveryMethodQueries;
 using E_Commerce.Core.ServicesContract;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +16,14 @@ namespace E_Commerce.API.Controllers
     public class DeliveryMethodController : ControllerBase
     {
         private readonly IDeliveryMethodServices _deliveryMethodServices;
+        private readonly IMediator _mediator;
         private readonly ILogger<DeliveryMethodController> _logger;
 
-        public DeliveryMethodController(IDeliveryMethodServices deliveryMethodServices, ILogger<DeliveryMethodController> logger)
+        public DeliveryMethodController(IDeliveryMethodServices deliveryMethodServices, ILogger<DeliveryMethodController> logger, IMediator mediator)
         {
             _deliveryMethodServices = deliveryMethodServices;
             _logger = logger;
+            _mediator = mediator;
         }
         /// <summary>
         /// Adds a new delivery method.
@@ -37,7 +42,7 @@ namespace E_Commerce.API.Controllers
         public async Task<ActionResult<ApiResponse>> AddDeliveryMethodAsync(DeliveryMethodAddRequest request)
         {
             _logger.LogInformation("AddDeliveryMethodAsync called.");
-            var response = await _deliveryMethodServices.CreateAsync(request);
+            var response = await _mediator.Send(new CreateDeliveryMethodCommand(request));
             if (response == null)
             {
                 _logger.LogError("Response is null");
@@ -74,7 +79,7 @@ namespace E_Commerce.API.Controllers
         public async Task<ActionResult<ApiResponse>> UpdateDeliveryMethodAsync(DeliveryMethodUpdateRequest request)
         {
             _logger.LogInformation("UpdateDeliveryMethodAsync called.");
-            var response = await _deliveryMethodServices.UpdateAsync(request);
+            var response = await _mediator.Send(new UpdateDeliveryMethodCommand(request));
             if (response == null)
             {
                 _logger.LogError("Response is null");
@@ -111,7 +116,7 @@ namespace E_Commerce.API.Controllers
         public async Task<ActionResult<ApiResponse>> DeleteDeliveryMethodAsync(Guid id)
         {
             _logger.LogInformation("DeleteDeliveryMethodAsync called.");
-            var response = await _deliveryMethodServices.DeleteAsync(id);
+            var response = await _mediator.Send(new DeleteDeliveryMethodCommand() { ID = id });
             if (!response)
             {
                 _logger.LogError("Failed to delete delivery method.");
@@ -146,7 +151,7 @@ namespace E_Commerce.API.Controllers
         public async Task<ActionResult<ApiResponse>> GetDeliveryMethodAsync(Guid id)
         {
             _logger.LogInformation("GetDeliveryMethodAsync called.");
-            var response = await _deliveryMethodServices.GetByAsync(x => x.DeliveryMethodID == id);
+            var response = await _mediator.Send(new GetDeliveryMethodByIdQuery() { ID = id});
             if (response == null)
             {
                 _logger.LogError("Delivery method not found.");
@@ -182,7 +187,7 @@ namespace E_Commerce.API.Controllers
         public async Task<ActionResult<ApiResponse>> GetAllDeliveryMethodsAsync()
         {
             _logger.LogInformation("GetAllDeliveryMethodsAsync called.");
-            var response = await _deliveryMethodServices.GetAllAsync();
+            var response = await _mediator.Send(new GetAllDeliveryMethodQuery());
             if (response == null)
             {
                 _logger.LogError("No delivery methods found.");
