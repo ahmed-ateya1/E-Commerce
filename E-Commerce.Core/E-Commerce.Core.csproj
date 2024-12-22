@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
     <PackageReference Include="sib_api_v3_sdk" Version="4.0.2" />
     <PackageReference Include="StackExchange.Redis" Version="2.8.22" />
+    <PackageReference Include="Stripe.net" Version="47.2.0" />
   </ItemGroup>
 
 </Project>

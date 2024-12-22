@@ -18,7 +18,7 @@ namespace E_Commerce.Core.MappingProfile
                 .ForMember(dest => dest.OrderItemID, opt => opt.MapFrom(src => src.OrderItemID))
                 .ForMember(dest => dest.ProductID, opt => opt.MapFrom(src => src.ProductID))
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))
-                .ForMember(dest => dest.ProductImage, opt => opt.MapFrom(src => src.Product.ProductImages.FirstOrDefault()))
+                .ForMember(dest => dest.ProductImage, opt => opt.MapFrom(src => src.Product.ProductImages.FirstOrDefault().ImageURL))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
                 .ReverseMap();

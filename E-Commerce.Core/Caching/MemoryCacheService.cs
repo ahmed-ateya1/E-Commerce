@@ -46,8 +46,8 @@ namespace E_Commerce.Core.Caching
             {
                 var cacheOptions = new MemoryCacheEntryOptions
                 {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
-                    SlidingExpiration = TimeSpan.FromMinutes(30) 
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(2),
+                    SlidingExpiration = TimeSpan.FromSeconds(1)
                 };
 
                 _memoryCache.Set(key, value, cacheOptions);

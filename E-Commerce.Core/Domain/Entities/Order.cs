@@ -9,6 +9,8 @@ public class Order
     public DateTime OrderDate { get; set; } = DateTime.UtcNow;
     public decimal SubTotal { get; set; }
     public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
+    public string PaymentIntentID { get; set; }
+    public string ClientSecret { get; set; }
     public Guid UserID { get; set; }
     public ApplicationUser User { get; set; }
 

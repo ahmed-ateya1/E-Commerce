@@ -13,6 +13,8 @@ namespace E_Commerce.Core.Dtos.OrderDto
         public string OrderStatus { get; set; }
         public Guid UserID { get; set; }
         public string UserName { get; set; } 
+        public string ClientSecret { get; set; }
+        public string PaymentIntentID { get; set; }
         public Guid AddressID { get; set; }
         public AddressResponse Address { get; set; }
         public Guid DeliveryMethodID { get; set; }

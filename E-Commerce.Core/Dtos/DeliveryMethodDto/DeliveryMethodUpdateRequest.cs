@@ -20,6 +20,7 @@ namespace E_Commerce.Core.Dtos.DeliveryMethodDto
         [StringLength(100, ErrorMessage = "Description can't be longer than 100 characters.")]
         public string Description { get; set; }
         [Required]
+        [Range(0.1, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
         public decimal Price { get; set; }
     }
 }

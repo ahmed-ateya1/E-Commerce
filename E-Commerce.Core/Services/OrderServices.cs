@@ -20,18 +20,21 @@ namespace E_Commerce.Core.Services
         private readonly IMapper _mapper;
         private readonly ILogger<OrderServices> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IPaymentService _paymentService;
 
         public OrderServices
             (
             IUnitOfWork unitOfWork,
             IMapper mapper,
             ILogger<OrderServices> logger,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IPaymentService paymentService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _paymentService = paymentService;
         }
         private async Task ExecuteWithTransactionAsync(Func<Task> action)
         {
@@ -126,7 +129,7 @@ namespace E_Commerce.Core.Services
             foreach (var orderItemRequest in orderRequest.OrderItems)
             {
                 var product = await _unitOfWork.Repository<Product>()
-                    .GetByAsync(x => x.ProductID == orderItemRequest.ProductID);
+                    .GetByAsync(x => x.ProductID == orderItemRequest.ProductID , includeProperties: "ProductImages");
 
                 if (product == null)
                 {
@@ -156,13 +159,16 @@ namespace E_Commerce.Core.Services
 
             order.OrderItems = orderItems;
             order.SubTotal = orderItems.Sum(x => x.Price * x.Quantity);
-
+            decimal totalAmount = order.SubTotal + order.DeliveryMethod.Price;
+            var paymentIntent = await _paymentService.CreatePaymentIntent(totalAmount, "usd", "Order Payment");
+            order.PaymentIntentID = paymentIntent.Id;
+            order.ClientSecret = paymentIntent.ClientSecret;
             await ExecuteWithTransactionAsync(async () =>
             {
                 await _unitOfWork.Repository<Order>().CreateAsync(order);
                 await _unitOfWork.CompleteAsync();
             });
-
+           
             return new ServiceResponse
             {
                 Message = "Order created successfully.",
@@ -212,7 +218,7 @@ namespace E_Commerce.Core.Services
             _logger.LogInformation("Fetching all orders with the specified filter.");
 
             var orders = await _unitOfWork.Repository<Order>()
-                .GetAllAsync(filter, includeProperties: "OrderItems,OrderItems.Product,Address,DeliveryMethod,User");
+                .GetAllAsync(filter, includeProperties: "OrderItems,OrderItems.Product,OrderItems.Product.ProductImages,Address,DeliveryMethod,User");
 
             if (!orders.Any())
             {

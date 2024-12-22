@@ -36,7 +36,7 @@ namespace E_Commerce.API.StartupExtensions
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("Hosting"));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
@@ -118,6 +118,7 @@ namespace E_Commerce.API.StartupExtensions
             services.AddScoped<IOrderServices , OrderServices>();
             services.AddScoped<IDeliveryMethodServices, DeliveryMethodServices>();
             services.AddScoped<IAddressServices, AddressServices>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
