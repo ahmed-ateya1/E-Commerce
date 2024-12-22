@@ -46,15 +46,21 @@ namespace E_Commerce.API.Controllers
         public async Task<ActionResult<ApiResponse>> AddOrder(OrderAddRequest request)
         {
             var response = await _orderServices.CreateAsync(request);
-            if (response == null)
+            if (!response.IsSuccess)
             {
                 return BadRequest(new ApiResponse
                 {
-                    Message = "Failed to add order",
+                    Message = response.Message,
                     StatusCode = HttpStatusCode.BadRequest
                 });
             }
-            return Ok(response);
+            return Ok(new ApiResponse
+            {
+                Message = "Order added successfully",
+                StatusCode = HttpStatusCode.OK,
+                Result = response.Result,
+                IsSuccess = true
+            });
         }
         /// <summary>
         /// Updates the status of an existing order.
@@ -75,18 +81,20 @@ namespace E_Commerce.API.Controllers
         public async Task<ActionResult<ApiResponse>> UpdateOrderStatus(Guid orderID, [FromBody] OrderStatus orderStatus)
         {
             var response = await _orderServices.UpdateAsync(orderID, orderStatus);
-            if (!response)
+            if (!response.IsSuccess)
             {
                 return BadRequest(new ApiResponse
                 {
-                    Message = "Failed to update order status",
+                    Message = response.Message,
                     StatusCode = HttpStatusCode.BadRequest
                 });
             }
             return Ok(new ApiResponse
             {
                 Message = "Order status updated successfully",
-                StatusCode = HttpStatusCode.OK
+                StatusCode = HttpStatusCode.OK,
+                Result = response.Result,
+                IsSuccess = true
             });
         }
         /// <summary>
@@ -107,18 +115,20 @@ namespace E_Commerce.API.Controllers
         public async Task<ActionResult<ApiResponse>> DeleteOrder(Guid orderId)
         {
             var response = await _orderServices.DeleteAsync(orderId);
-            if (!response)
+            if (!response.IsSuccess)
             {
                 return BadRequest(new ApiResponse
                 {
-                    Message = "Failed to delete order",
+                    Message =  response.Message,
                     StatusCode = HttpStatusCode.BadRequest
                 });
             }
             return Ok(new ApiResponse
             {
                 Message = "Order deleted successfully",
-                StatusCode = HttpStatusCode.OK
+                StatusCode = HttpStatusCode.OK,
+                Result = response.Result,
+                IsSuccess = true
             });
         }
         /// <summary>
@@ -139,16 +149,22 @@ namespace E_Commerce.API.Controllers
         public async Task<ActionResult<OrderResponse>> GetOrder(Guid orderId)
         {
             var response = await _orderServices.GetByAsync(x => x.OrderID == orderId);
-            if (response == null)
+            if (!response.IsSuccess)
             {
                 return NotFound(new ApiResponse()
                 {
                     IsSuccess = false,
-                    Message = "Order not found",
+                    Message = response.Message,
                     StatusCode = HttpStatusCode.NotFound
                 });
             }
-            return Ok(response);
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Message = "Order retrieved successfully",
+                Result = response.Result,
+                StatusCode = HttpStatusCode.OK
+            });
         }
 
         /// <summary>
@@ -169,21 +185,21 @@ namespace E_Commerce.API.Controllers
         public async Task<ActionResult<List<OrderResponse>>> GetOrders()
         {
             var response = await _orderServices.GetAllAsync();
-            if (response == null)
+            if (!response.IsSuccess)
             {
                 return NotFound(new ApiResponse()
                 {
                     IsSuccess = false,
-                    Message = "No orders found",
+                    Message = response.Message,
                     StatusCode = HttpStatusCode.NotFound,
-                    Result = Enumerable.Empty<OrderResponse>()
+                    Result = response.Result
                 });
             }
             return Ok(new ApiResponse()
             {
                 IsSuccess = true,
                 Message = "Orders retrieved successfully",
-                Result = response,
+                Result = response.Result,
                 StatusCode = HttpStatusCode.OK
             });
         }
@@ -224,13 +240,14 @@ namespace E_Commerce.API.Controllers
             var response = await _orderServices
                 .GetAllAsync(x => x.UserID == user.Id);
 
-            if (response == null)
+            if (!response.IsSuccess)
             {
                 return NotFound(new ApiResponse()
                 {
                     IsSuccess = false,
-                    Message = "No orders found",
-                    StatusCode = HttpStatusCode.NotFound
+                    Message = response.Message,
+                    StatusCode = HttpStatusCode.NotFound,
+                    Result = response.Result
                 });
             }
 
@@ -238,7 +255,7 @@ namespace E_Commerce.API.Controllers
             {
                 IsSuccess = true,
                 Message = "Orders retrieved successfully",
-                Result = response,
+                Result = response.Result,
                 StatusCode = HttpStatusCode.OK
             });
         }

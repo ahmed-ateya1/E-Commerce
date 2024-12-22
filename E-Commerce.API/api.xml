@@ -253,58 +253,6 @@
             <response code="404">No brands found matching the name.</response>
             <returns>An API response containing the list of brands matching the name.</returns>
         </member>
-        <member name="T:E_Commerce.API.Controllers.CartController">
-            <summary>
-            Provides endpoints for managing the shopping cart.
-            Interacts with Redis to retrieve, update, and delete cart data.
-            </summary>
-        </member>
-        <member name="M:E_Commerce.API.Controllers.CartController.#ctor(E_Commerce.Core.ServicesContract.IRedisCartServices)">
-            <summary>
-            Initializes a new instance of the <see cref="T:E_Commerce.API.Controllers.CartController"/> class.
-            </summary>
-            <param name="redisCartServices">The service used to interact with Redis for cart operations.</param>
-            <remarks>
-            The <paramref name="redisCartServices"/> parameter is injected via dependency injection.
-            </remarks>
-        </member>
-        <member name="M:E_Commerce.API.Controllers.CartController.GetCartAsync(System.Guid)">
-            <summary>
-            Retrieves the shopping cart from Redis by its unique identifier.
-            </summary>
-            <param name="cartId">The unique identifier of the cart to be retrieved.</param>
-            <returns>
-            Returns an <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult`1"/> with the cart if found; otherwise, returns a <c>NotFound</c> result.
-            </returns>
-            <remarks>
-            If the cart does not exist in Redis, a 404 Not Found response will be returned.
-            </remarks>
-        </member>
-        <member name="M:E_Commerce.API.Controllers.CartController.UpdateCartAsync(E_Commerce.Core.Domain.Entities.Cart)">
-            <summary>
-            Updates or creates a shopping cart in Redis.
-            </summary>
-            <param name="cart">The <see cref="T:E_Commerce.Core.Domain.Entities.Cart"/> object containing the data to be updated or created in Redis.</param>
-            <returns>
-            Returns an <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult`1"/> containing the updated or created cart.
-            </returns>
-            <remarks>
-            The cart will be serialized and stored in Redis with a 30-day expiration time.
-            If the update is successful, the same cart object will be returned.
-            </remarks>
-        </member>
-        <member name="M:E_Commerce.API.Controllers.CartController.DeleteCartAsync(System.Guid)">
-            <summary>
-            Deletes a shopping cart from Redis by its unique identifier.
-            </summary>
-            <param name="cartId">The unique identifier of the cart to be deleted.</param>
-            <returns>
-            Returns an <see cref="!:ActionResult&lt;bool&gt;"/> indicating whether the cart was successfully deleted.
-            </returns>
-            <remarks>
-            If the cart does not exist or the deletion fails, this method will return <c>false</c>.
-            </remarks>
-        </member>
         <member name="T:E_Commerce.API.Controllers.CategoryController">
             <summary>
             API Controller for managing categories.
@@ -316,32 +264,6 @@
             </summary>
             <param name="mediator">The mediator instance for handling requests.</param>
             <param name="logger">The logger instance for logging information.</param>
-        </member>
-        <member name="M:E_Commerce.API.Controllers.CategoryController.GetCategories">
-            <summary>
-            Retrieves all categories.
-            </summary>
-            <returns>An API response with the list of categories or an error message.</returns>
-            <response code="200">Categories retrieved successfully.</response>
-            <response code="400">Failed to retrieve the categories.</response>
-        </member>
-        <member name="M:E_Commerce.API.Controllers.CategoryController.GetCategory(System.Guid)">
-            <summary>
-            Retrieves a category by ID.
-            </summary>
-            <param name="id">The ID of the category to retrieve.</param>
-            <returns>An API response with the category details or an error message.</returns>
-            <response code="200">Category retrieved successfully.</response>
-            <response code="400">Failed to retrieve the category.</response>
-        </member>
-        <member name="M:E_Commerce.API.Controllers.CategoryController.GetCategoriesforParent(System.Guid)">
-            <summary>
-            Retrieves categories by parent ID.
-            </summary>
-            <param name="parentId">The ID of the parent category.</param>
-            <returns>An API response with the list of categories or an error message.</returns>
-            <response code="200">Categories retrieved successfully by parent.</response>
-            <response code="400">Failed to retrieve categories by parent.</response>
         </member>
         <member name="M:E_Commerce.API.Controllers.CategoryController.AddCategory(E_Commerce.Core.Dtos.CategoryDto.CategoryAddRequest)">
             <summary>
@@ -369,6 +291,47 @@
             <returns>An API response indicating success or failure.</returns>
             <response code="200">Category deleted successfully.</response>
             <response code="400">Failed to delete the category.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CategoryController.GetCategories">
+            <summary>
+            Retrieves all categories.
+            </summary>
+            <returns>An API response with the list of categories or an error message.</returns>
+            <response code="200">Categories retrieved successfully.</response>
+            <response code="400">Failed to retrieve the categories.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CategoryController.GetCategory(System.Guid)">
+            <summary>
+            Retrieves a category by ID.
+            </summary>
+            <param name="id">The ID of the category to retrieve.</param>
+            <returns>An API response with the category details or an error message.</returns>
+            <response code="200">Category retrieved successfully.</response>
+            <response code="400">Failed to retrieve the category.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CategoryController.GetCategoriesforParent(System.Guid)">
+            <summary>
+            Retrieves categories by parent ID.
+            </summary>
+            <param name="parentId">The ID of the parent category.</param>
+            <returns>An API response with the list of categories or an error message.</returns>
+            <response code="200">Categories retrieved successfully by parent.</response>
+            <response code="400">Failed to retrieve categories by parent.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.CategoryController.GetCategoriesParent">
+            <summary>
+            Retrieves all parent categories.
+            </summary>
+            <remarks>
+            This endpoint fetches a list of all parent categories available in the system.
+            </remarks>
+            <returns>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult"/> containing an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/>:
+            - If successful, the response will include the list of parent categories, a success message, and a status code of 200 (OK).
+            - If unsuccessful, the response will include a failure message and a status code of 400 (Bad Request).
+            </returns>
+            <response code="200">Parent categories retrieved successfully.</response>
+            <response code="400">Failed to retrieve parent categories.</response>
         </member>
         <member name="M:E_Commerce.API.Controllers.DeliveryMethodController.AddDeliveryMethodAsync(E_Commerce.Core.Dtos.DeliveryMethodDto.DeliveryMethodAddRequest)">
             <summary>
@@ -723,6 +686,64 @@
             <returns>An <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> containing the list of replies to the review.</returns>
             <response code="200">Review replies retrieved successfully.</response>
             <response code="400">Failed to retrieve review replies.</response>
+        </member>
+        <member name="T:E_Commerce.API.Controllers.ShoppingCartController">
+            <summary>
+            Provides endpoints for managing the shopping cart.
+            Interacts with Redis to retrieve, update, and delete cart data.
+            </summary>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.ShoppingCartController.#ctor(E_Commerce.Core.ServicesContract.IShoppingCartService,Microsoft.AspNetCore.Http.IHttpContextAccessor,E_Commerce.Core.Domain.RepositoriesContract.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:E_Commerce.API.Controllers.ShoppingCartController"/> class.
+            </summary>
+            <param name="shoppingCartService">Service for shopping cart operations.</param>
+            <param name="httpContextAccessor">Accessor for HTTP context to retrieve user information.</param>
+            <param name="unitOfWork">Unit of work to manage repositories and database transactions.</param>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.ShoppingCartController.GetCart(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves the current user's shopping cart.
+            </summary>
+            <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the user's shopping cart.</returns>
+            <remarks>
+            This endpoint requires the user to be authenticated.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.ShoppingCartController.AddToCart(E_Commerce.Core.Domain.Entities.CartItems,System.Threading.CancellationToken)">
+            <summary>
+            Adds an item to the current user's shopping cart.
+            </summary>
+            <param name="item">The item to be added to the cart.</param>
+            <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating the operation result.</returns>
+            <remarks>
+            This endpoint requires the user to be authenticated.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.ShoppingCartController.RemoveFromCart(System.String,System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Removes an item from the current user's shopping cart.
+            </summary>
+            <param name="userId">The ID of the user whose cart item is to be removed.</param>
+            <param name="productId">The ID of the product to be removed from the cart.</param>
+            <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating the operation result.</returns>
+            <remarks>
+            This endpoint requires the user to be authenticated.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.ShoppingCartController.ClearCart(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Clears all items in the current user's shopping cart.
+            </summary>
+            <param name="userId">The ID of the user whose cart is to be cleared.</param>
+            <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating the operation result.</returns>
+            <remarks>
+            This endpoint requires the user to be authenticated.
+            </remarks>
         </member>
         <member name="T:E_Commerce.API.Controllers.TechnicalSpecificationController">
             <summary>

@@ -33,8 +33,13 @@ namespace E_Commerce.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            app.UseCors();
+            else
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+                app.UseHsts();
+            }
+            app.UseCors("AllowLocalhost3000");
             app.UseStaticFiles();
             app.UseHttpsRedirection();
 

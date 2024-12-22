@@ -36,7 +36,7 @@ namespace E_Commerce.API.StartupExtensions
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(configuration.GetConnectionString("Hosting"));
             });
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
@@ -78,14 +78,17 @@ namespace E_Commerce.API.StartupExtensions
             });
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
-                    builder => builder
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+                options.AddPolicy("AllowLocalhost3000", builder =>
+                    builder.WithOrigins("http://localhost:3000")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials()
+                           .SetIsOriginAllowed(origin => true)
+                           .WithExposedHeaders("Set-Cookie"));
             });
             services.AddLogging();
             services.AddDistributedMemoryCache();
+            services.AddMemoryCache();
             services.AddSingleton<IConnectionMultiplexer>(x =>
             {
                 var options = ConfigurationOptions.Parse(configuration.GetConnectionString("Redis"), true);
@@ -102,6 +105,7 @@ namespace E_Commerce.API.StartupExtensions
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IBrandService, BrandService>();
             services.AddSingleton<ICacheService, CacheService>();
+            services.AddSingleton<IMemoryCacheService, MemoryCacheService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IFileServices, FileService>();
             services.AddScoped<IProductService, ProductService>();
@@ -110,7 +114,7 @@ namespace E_Commerce.API.StartupExtensions
             services.AddScoped<IWishlistService, WishlistService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IVoteService, VoteService>();
-            services.AddScoped<IRedisCartServices, RedisCartServices>();
+            services.AddScoped<IShoppingCartService, ShoppingCartService>();
             services.AddScoped<IOrderServices , OrderServices>();
             services.AddScoped<IDeliveryMethodServices, DeliveryMethodServices>();
             services.AddScoped<IAddressServices, AddressServices>();

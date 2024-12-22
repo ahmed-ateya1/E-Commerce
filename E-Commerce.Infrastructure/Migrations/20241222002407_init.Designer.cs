@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241209011415_updateTableVote")]
-    partial class updateTableVote
+    [Migration("20241222002407_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,64 @@ namespace E_Commerce.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Address", b =>
+                {
+                    b.Property<Guid>("AddressID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AddressLine2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("AddressID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Addresses", (string)null);
+                });
 
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Brand", b =>
                 {
@@ -63,6 +121,33 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.ToTable("Categories", (string)null);
                 });
 
+            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.DeliveryMethod", b =>
+                {
+                    b.Property<Guid>("DeliveryMethodID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DeliveryTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("DeliveryMethodID");
+
+                    b.ToTable("DeliveryMethods", (string)null);
+                });
+
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Notifications", b =>
                 {
                     b.Property<Guid>("NotificationID")
@@ -96,68 +181,30 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.ToTable("Notifications", (string)null);
                 });
 
-            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Product", b =>
+            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.OrderItem", b =>
                 {
+                    b.Property<Guid>("OrderItemID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("ProductID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("AddedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("AvgRating")
-                        .HasColumnType("float");
-
-                    b.Property<Guid>("BrandID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CategoryID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<double>("Discount")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ModelNumber")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProductDescription")
-                        .IsRequired()
-                        .HasMaxLength(800)
-                        .HasColumnType("nvarchar(800)");
+                    b.HasKey("OrderItemID");
 
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.HasIndex("OrderID");
 
-                    b.Property<decimal>("ProductPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.HasIndex("ProductID");
 
-                    b.Property<int>("StockQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<long>("TotalReviews")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("UserID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("WarrantyPeriod")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductID");
-
-                    b.HasIndex("BrandID");
-
-                    b.HasIndex("CategoryID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.ProductImages", b =>
@@ -496,6 +543,119 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Order", b =>
+                {
+                    b.Property<Guid>("OrderID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AddressID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DeliveryMethodID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderStatus")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OrderID");
+
+                    b.HasIndex("AddressID");
+
+                    b.HasIndex("DeliveryMethodID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Orders", (string)null);
+                });
+
+            modelBuilder.Entity("Product", b =>
+                {
+                    b.Property<Guid>("ProductID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("AvgRating")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("BrandID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CategoryID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<double>("Discount")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ModelNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductDescription")
+                        .IsRequired()
+                        .HasMaxLength(800)
+                        .HasColumnType("nvarchar(800)");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("ProductPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<long>("TotalReviews")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("WarrantyPeriod")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductID");
+
+                    b.HasIndex("BrandID");
+
+                    b.HasIndex("CategoryID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Address", b =>
+                {
+                    b.HasOne("E_Commerce.Core.Domain.IdentityEntities.ApplicationUser", "User")
+                        .WithMany("Addresses")
+                        .HasForeignKey("UserID")
+                        .IsRequired()
+                        .HasConstraintName("FK_Addresses_AspNetUsers");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Category", b =>
                 {
                     b.HasOne("E_Commerce.Core.Domain.Entities.Category", "ParentCategory")
@@ -517,36 +677,28 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Product", b =>
+            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.OrderItem", b =>
                 {
-                    b.HasOne("E_Commerce.Core.Domain.Entities.Brand", "Brand")
-                        .WithMany("Products")
-                        .HasForeignKey("BrandID")
+                    b.HasOne("Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_Commerce.Core.Domain.Entities.Category", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("Product", "Product")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_Commerce.Core.Domain.IdentityEntities.ApplicationUser", "User")
-                        .WithMany("Products")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("Order");
 
-                    b.Navigation("Brand");
-
-                    b.Navigation("Category");
-
-                    b.Navigation("User");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.ProductImages", b =>
                 {
-                    b.HasOne("E_Commerce.Core.Domain.Entities.Product", "Product")
+                    b.HasOne("Product", "Product")
                         .WithMany("ProductImages")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -562,7 +714,7 @@ namespace E_Commerce.Infrastructure.Migrations
                         .HasForeignKey("ParentReviewID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("E_Commerce.Core.Domain.Entities.Product", "Product")
+                    b.HasOne("Product", "Product")
                         .WithMany("Reviews")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -583,7 +735,7 @@ namespace E_Commerce.Infrastructure.Migrations
 
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.TechnicalSpecification", b =>
                 {
-                    b.HasOne("E_Commerce.Core.Domain.Entities.Product", "Product")
+                    b.HasOne("Product", "Product")
                         .WithMany("TechnicalSpecifications")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -613,7 +765,7 @@ namespace E_Commerce.Infrastructure.Migrations
 
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Wishlist", b =>
                 {
-                    b.HasOne("E_Commerce.Core.Domain.Entities.Product", "Product")
+                    b.HasOne("Product", "Product")
                         .WithMany("Wishlists")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -718,6 +870,65 @@ namespace E_Commerce.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Order", b =>
+                {
+                    b.HasOne("E_Commerce.Core.Domain.Entities.Address", "Address")
+                        .WithMany("Orders")
+                        .HasForeignKey("AddressID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_Commerce.Core.Domain.Entities.DeliveryMethod", "DeliveryMethod")
+                        .WithMany("Orders")
+                        .HasForeignKey("DeliveryMethodID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_Commerce.Core.Domain.IdentityEntities.ApplicationUser", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("DeliveryMethod");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Product", b =>
+                {
+                    b.HasOne("E_Commerce.Core.Domain.Entities.Brand", "Brand")
+                        .WithMany("Products")
+                        .HasForeignKey("BrandID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_Commerce.Core.Domain.Entities.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("E_Commerce.Core.Domain.IdentityEntities.ApplicationUser", "User")
+                        .WithMany("Products")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Address", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Brand", b =>
                 {
                     b.Navigation("Products");
@@ -730,15 +941,9 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.Navigation("SubCategories");
                 });
 
-            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Product", b =>
+            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.DeliveryMethod", b =>
                 {
-                    b.Navigation("ProductImages");
-
-                    b.Navigation("Reviews");
-
-                    b.Navigation("TechnicalSpecifications");
-
-                    b.Navigation("Wishlists");
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Review", b =>
@@ -750,13 +955,35 @@ namespace E_Commerce.Infrastructure.Migrations
 
             modelBuilder.Entity("E_Commerce.Core.Domain.IdentityEntities.ApplicationUser", b =>
                 {
+                    b.Navigation("Addresses");
+
                     b.Navigation("Notifications");
+
+                    b.Navigation("Orders");
 
                     b.Navigation("Products");
 
                     b.Navigation("Reviews");
 
                     b.Navigation("Votes");
+
+                    b.Navigation("Wishlists");
+                });
+
+            modelBuilder.Entity("Order", b =>
+                {
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("Product", b =>
+                {
+                    b.Navigation("OrderItems");
+
+                    b.Navigation("ProductImages");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("TechnicalSpecifications");
 
                     b.Navigation("Wishlists");
                 });

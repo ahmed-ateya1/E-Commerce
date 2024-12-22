@@ -309,8 +309,9 @@ namespace E_Commerce.API.Controllers
             var cookieOption = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
-                Expires = expires
+                Secure = false,
+                Expires = expires,
+                SameSite = SameSiteMode.Lax,
             };
             Response.Cookies.Append("refreshToken", refreshToken, cookieOption);
         }

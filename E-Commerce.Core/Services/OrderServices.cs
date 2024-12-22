@@ -2,12 +2,14 @@
 using E_Commerce.Core.Domain.Entities;
 using E_Commerce.Core.Domain.IdentityEntities;
 using E_Commerce.Core.Domain.RepositoriesContract;
+using E_Commerce.Core.Dtos;
 using E_Commerce.Core.Dtos.OrderDto;
 using E_Commerce.Core.Helper;
 using E_Commerce.Core.ServicesContract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
+using System.Net;
 using System.Security.Claims;
 
 namespace E_Commerce.Core.Services
@@ -71,7 +73,7 @@ namespace E_Commerce.Core.Services
             return user;
         }
 
-        public async Task<OrderResponse> CreateAsync(OrderAddRequest? orderRequest)
+        public async Task<ServiceResponse> CreateAsync(OrderAddRequest? orderRequest)
         {
             _logger.LogInformation("Creating a new order.");
 
@@ -87,7 +89,13 @@ namespace E_Commerce.Core.Services
             if (address == null)
             {
                 _logger.LogError("Address not found.");
-                throw new KeyNotFoundException("Address not found.");
+                return new ServiceResponse
+                {
+                    Message = "Address not found.",
+                    IsSuccess = false,
+                    Result = null,
+                    StatusCode = HttpStatusCode.NotFound
+                };
             }
 
             var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>()
@@ -95,7 +103,13 @@ namespace E_Commerce.Core.Services
             if (deliveryMethod == null)
             {
                 _logger.LogError("Delivery method not found.");
-                throw new KeyNotFoundException("Delivery method not found.");
+                return new ServiceResponse
+                {
+                    Message = "Delivery method not found.",
+                    IsSuccess = false,
+                    Result = null,
+                    StatusCode = HttpStatusCode.NotFound
+                };
             }
 
             var order = _mapper.Map<Order>(orderRequest);
@@ -123,7 +137,13 @@ namespace E_Commerce.Core.Services
                 if (product.StockQuantity < orderItemRequest.Quantity)
                 {
                     _logger.LogError($"Insufficient stock for product {product.ProductName}. Requested: {orderItemRequest.Quantity}, Available: {product.StockQuantity}");
-                    throw new InvalidOperationException($"Insufficient stock for product {product.ProductName}.");
+                    return new ServiceResponse
+                    {
+                        Message = $"Insufficient stock for product {product.ProductName}. Requested: {orderItemRequest.Quantity}, Available: {product.StockQuantity}",
+                        IsSuccess = false,
+                        Result = null,
+                        StatusCode = HttpStatusCode.BadRequest
+                    };
                 }
                 product.StockQuantity -= orderItemRequest.Quantity;
                 await _unitOfWork.Repository<Product>().UpdateAsync(product);
@@ -143,12 +163,18 @@ namespace E_Commerce.Core.Services
                 await _unitOfWork.CompleteAsync();
             });
 
-            return _mapper.Map<OrderResponse>(order);
+            return new ServiceResponse
+            {
+                Message = "Order created successfully.",
+                IsSuccess = true,
+                Result = _mapper.Map<OrderResponse>(order),
+                StatusCode = HttpStatusCode.Created
+            };
         }
 
 
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<ServiceResponse> DeleteAsync(Guid id)
         {
             var order = await _unitOfWork.Repository<Order>()
                 .GetByAsync(x => x.OrderID == id ,includeProperties: "OrderItems");
@@ -156,7 +182,13 @@ namespace E_Commerce.Core.Services
             if (order == null)
             {
                 _logger.LogError($"Order with ID {id} not found.");
-                return false;
+                return new ServiceResponse
+                {
+                    Message = $"Order with ID {id} not found.",
+                    IsSuccess = false,
+                    Result = null,
+                    StatusCode = HttpStatusCode.NotFound
+                };
             }
             await ExecuteWithTransactionAsync(async () =>
             {
@@ -166,56 +198,98 @@ namespace E_Commerce.Core.Services
                 }
                 await _unitOfWork.Repository<Order>().DeleteAsync(order);
             });
-            return true;
+            return new ServiceResponse
+            {
+                Result = true,
+                IsSuccess = true,
+                Message = "Order deleted successfully.",
+                StatusCode = HttpStatusCode.OK
+            };
         }
 
-        public async Task<IEnumerable<OrderResponse>> GetAllAsync(Expression<Func<Order, bool>>? filter = null)
+        public async Task<ServiceResponse> GetAllAsync(Expression<Func<Order, bool>>? filter = null)
         {
             _logger.LogInformation("Fetching all orders with the specified filter.");
 
             var orders = await _unitOfWork.Repository<Order>()
-                .GetAllAsync(filter, includeProperties: "OrderItems,Address,DeliveryMethod,User");
+                .GetAllAsync(filter, includeProperties: "OrderItems,OrderItems.Product,Address,DeliveryMethod,User");
 
             if (!orders.Any())
             {
                 _logger.LogWarning("No orders found.");
-                return Enumerable.Empty<OrderResponse>();
+                return new ServiceResponse
+                {
+                    Message = "No orders found.",
+                    IsSuccess = true,
+                    Result = Enumerable.Empty<OrderResponse>(),
+                    StatusCode = HttpStatusCode.NotFound
+                };
             }
 
-            return _mapper.Map<IEnumerable<OrderResponse>>(orders);
+            return new ServiceResponse
+            {
+                Result = _mapper.Map<IEnumerable<OrderResponse>>(orders),
+                IsSuccess = true,
+                Message = "Orders fetched successfully.",
+                StatusCode = HttpStatusCode.OK
+            };
         }
 
-        public async Task<OrderResponse> GetByAsync(Expression<Func<Order, bool>> filter, bool isTracked = false)
+        public async Task<ServiceResponse> GetByAsync(Expression<Func<Order, bool>> filter, bool isTracked = false)
         {
             _logger.LogInformation("Fetching an order by the specified filter.");
 
             var order = await _unitOfWork.Repository<Order>()
-                .GetByAsync(filter, includeProperties: "OrderItems,Address,DeliveryMethod,User", isTracked: isTracked);
+                .GetByAsync(filter, includeProperties: "OrderItems,OrderItems.Product,Address,DeliveryMethod,User", isTracked: isTracked);
 
             if (order == null)
             {
                 _logger.LogError("Order not found.");
-                throw new KeyNotFoundException("Order not found.");
+                return new ServiceResponse
+                {
+                    Message = "Order not found.",
+                    IsSuccess = false,
+                    Result = null,
+                    StatusCode = HttpStatusCode.NotFound
+                };
             }
 
-            return _mapper.Map<OrderResponse>(order);
+            return new ServiceResponse
+            {
+                Result = _mapper.Map<OrderResponse>(order),
+                IsSuccess = true,
+                Message = "Order fetched successfully.",
+                StatusCode = HttpStatusCode.OK
+            };
         }
 
-        public async Task<bool> UpdateAsync(Guid orderID, OrderStatus orderStatus)
+        public async Task<ServiceResponse> UpdateAsync(Guid orderID, OrderStatus orderStatus)
         {
             var order = await _unitOfWork.Repository<Order>()
                 .GetByAsync(x => x.OrderID == orderID);
             if (order == null)
             {
                 _logger.LogError($"Order with ID {orderID} not found.");
-                return false;
+                return new ServiceResponse
+                {
+                    Message = $"Order with ID {orderID} not found.",
+                    IsSuccess = false,
+                    Result = null,
+                    StatusCode = HttpStatusCode.NotFound
+                };
             }
             order.OrderStatus = orderStatus;
             await ExecuteWithTransactionAsync(async () =>
             {
                 await _unitOfWork.Repository<Order>().UpdateAsync(order);
             });
-            return true;
+            return new ServiceResponse
+            {
+                Result = true,
+                IsSuccess = true,
+                Message = "Order updated successfully.",
+                StatusCode = HttpStatusCode.OK
+            };
         }
     }
 }
