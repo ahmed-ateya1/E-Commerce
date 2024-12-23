@@ -28,6 +28,7 @@ E-Commerce.API is a full-featured backend application designed for an online sho
 
 ### Others
 - **AutoMapper**: For mapping between DTOs and entities.
+- **SignalR**: For real time Application.
 - **Swagger**: For API documentation.
 
 ---
