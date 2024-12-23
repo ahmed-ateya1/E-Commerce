@@ -28,7 +28,7 @@ E-Commerce.API is a full-featured backend application designed for an online sho
 
 ### Others
 - **AutoMapper**: For mapping between DTOs and entities.
-- **SignalR**: For real time Application.
+- **SignalR**: For real-time application features such as notifications.
 - **Swagger**: For API documentation.
 
 ---
@@ -50,6 +50,18 @@ The project follows a clean architecture approach, separating concerns into mult
 
 ### 4. **Repository Pattern**
    - Provides data access logic via a unit of work and repositories.
+
+### 5. **CQRS (Command Query Responsibility Segregation)**
+   - Separates commands (write operations) and queries (read operations) to improve scalability and maintainability.
+   - Commands handle updates, inserts, and deletions, while queries handle data retrieval.
+
+### 6. **Generic Repository**
+   - Implements a generic approach for data access, reducing code duplication.
+   - Provides CRUD operations for all entities, making the repository reusable and extensible.
+
+### 7. **Unit of Work**
+   - Manages transactions across multiple repositories, ensuring consistency.
+   - Simplifies data operations by grouping multiple changes into a single transaction.
 
 ---
 
@@ -162,16 +174,9 @@ The project follows a clean architecture approach, separating concerns into mult
 - Includes repositories, database context, and migrations.
 
 ---
+
 ## API Documentation
 - API documentation is available via Swagger at `/swagger`.
-
----
-
-## Contributing
-1. Fork the repository.
-2. Create a feature branch.
-3. Commit your changes.
-4. Open a pull request.
 
 ---
 
