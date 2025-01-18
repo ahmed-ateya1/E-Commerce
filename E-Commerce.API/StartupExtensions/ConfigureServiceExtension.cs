@@ -18,6 +18,7 @@ using E_Commerce.Core.Queries.BrandQueries;
 using E_Commerce.Core.Caching;
 using E_Commerce.API.FileServices;
 using StackExchange.Redis;
+using E_Commerce.Infrastructure.Repositories;
 
 namespace E_Commerce.API.StartupExtensions
 {
@@ -36,7 +37,7 @@ namespace E_Commerce.API.StartupExtensions
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("Hosting"));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
@@ -119,6 +120,7 @@ namespace E_Commerce.API.StartupExtensions
             services.AddScoped<IDeliveryMethodServices, DeliveryMethodServices>();
             services.AddScoped<IAddressServices, AddressServices>();
             services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IUserContext, UserContext>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>

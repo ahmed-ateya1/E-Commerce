@@ -2,16 +2,10 @@
 using E_Commerce.Core.Domain.Entities;
 using E_Commerce.Core.Domain.RepositoriesContract;
 using E_Commerce.Core.Dtos.CategoryDto;
-using E_Commerce.Core.Dtos;
 using E_Commerce.Core.Helper;
 using E_Commerce.Core.ServicesContract;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace E_Commerce.Core.Services
 {

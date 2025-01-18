@@ -1,16 +1,12 @@
 ﻿using AutoMapper;
 using E_Commerce.Core.Domain.Entities;
-using E_Commerce.Core.Domain.IdentityEntities;
 using E_Commerce.Core.Domain.RepositoriesContract;
 using E_Commerce.Core.Dtos;
 using E_Commerce.Core.Dtos.ReviewDto;
 using E_Commerce.Core.Helper;
 using E_Commerce.Core.ServicesContract;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Linq.Expressions;
-using System.Security.Claims;
 
 namespace E_Commerce.Core.Services
 {
@@ -19,14 +15,14 @@ namespace E_Commerce.Core.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<ReviewService> _logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserContext _userContext;
 
-        public ReviewService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<ReviewService> logger, IHttpContextAccessor httpContextAccessor)
+        public ReviewService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<ReviewService> logger, IUserContext userContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
-            _httpContextAccessor = httpContextAccessor;
+            _userContext = userContext;
         }
 
         private void LogEntityNotFound(string entityName, Guid id)
@@ -81,21 +77,6 @@ namespace E_Commerce.Core.Services
             }
             return product;
         }
-
-        private async Task<ApplicationUser?> GetCurrentUserAsync()
-        {
-            var email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-
-            if (string.IsNullOrEmpty(email))
-            {
-                _logger.LogWarning("No user is authenticated.");
-                return null;
-            }
-
-            var user = await _unitOfWork.Repository<ApplicationUser>().GetByAsync(x => x.Email == email);
-            return user;
-        }
-
         private async Task ExecuteWithTransactionAsync(Func<Task> action)
         {
             using var transaction = await _unitOfWork.BeginTransactionAsync();
@@ -118,8 +99,8 @@ namespace E_Commerce.Core.Services
             if (request == null) throw new ArgumentNullException(nameof(request));
             ValidationHelper.ValidateModel(request);
 
-            var user = await GetCurrentUserAsync();
-            if(user == null)
+            var user = await _userContext.GetCurrentUserAsync();
+            if (user == null)
             {
                 _logger.LogWarning("No user is authenticated.");
                 return null;
@@ -191,7 +172,7 @@ namespace E_Commerce.Core.Services
 
             var response = _mapper.Map<IEnumerable<ReviewResponse>>(reviews);
 
-            var user = await GetCurrentUserAsync();
+            var user = await _userContext.GetCurrentUserAsync();
             if (user != null)
             {
                 await HandlerVotedAsync(response, user.Id);

@@ -14,41 +14,20 @@ public class VoteService : IVoteService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<VoteService> _logger;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
+    private readonly IUserContext _userContext;
 
     public VoteService(
         IUnitOfWork unitOfWork,
         ILogger<VoteService> logger,
         IHttpContextAccessor httpContextAccessor,
-        IMapper mapper)
+        IMapper mapper,
+        IUserContext userContext)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
-        _httpContextAccessor = httpContextAccessor;
         _mapper = mapper;
-    }
-
-    // Get the currently authenticated user
-    private async Task<ApplicationUser> GetCurrentUserAsync()
-    {
-        var email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-
-        if (string.IsNullOrEmpty(email))
-        {
-            _logger.LogWarning("No user is authenticated.");
-            throw new InvalidOperationException("User is not authenticated.");
-        }
-
-        var user = await _unitOfWork.Repository<ApplicationUser>().GetByAsync(x => x.Email == email);
-
-        if (user == null)
-        {
-            _logger.LogWarning("User not found: {Email}", email);
-            throw new ArgumentNullException(nameof(user));
-        }
-
-        return user;
+        _userContext = userContext;
     }
 
     // Check if a review exists
@@ -74,7 +53,12 @@ public class VoteService : IVoteService
 
         ValidationHelper.ValidateModel(request);
 
-        var user = await GetCurrentUserAsync();
+        var user = await _userContext.GetCurrentUserAsync();
+        if (user == null)
+        {
+            _logger.LogError("User not found");
+            throw new ArgumentNullException(nameof(user));
+        }
         var review = await CheckIfReviewExistsAsync(request.ReviewID);
 
         var existingVote = await _unitOfWork.Repository<Vote>().GetByAsync(
@@ -130,7 +114,12 @@ public class VoteService : IVoteService
             throw new ArgumentNullException(nameof(request));
         }
         ValidationHelper.ValidateModel(request);
-        var user = await GetCurrentUserAsync();
+        var user = await _userContext.GetCurrentUserAsync();
+        if (user == null)
+        {
+            _logger.LogError("User not found");
+            throw new ArgumentNullException(nameof(user));
+        }
         var vote = await _unitOfWork.Repository<Vote>().GetByAsync(
             x => x.ReviewID == request.ReviewID && x.UserID == user.Id, includeProperties: "Review");
 

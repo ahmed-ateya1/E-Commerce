@@ -603,6 +603,22 @@
             Use this endpoint to get a paginated list of all products.
             </remarks>
         </member>
+        <member name="M:E_Commerce.API.Controllers.ProductController.GetTopProducts(PaginationDto)">
+            <summary>
+            Retrieves a paginated list of Top products.
+            </summary>
+            <param name="pagination">The pagination details including page number and page size.</param>
+            <returns>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult`1"/> containing the result of the operation:
+            <list type="bullet">
+            <item><description><see cref="F:System.Net.HttpStatusCode.OK"/>: Products fetched successfully.</description></item>
+            <item><description><see cref="F:System.Net.HttpStatusCode.BadRequest"/>: Failed to fetch products.</description></item>
+            </list>
+            </returns>
+            <remarks>
+            Use this endpoint to get a paginated list of all products.
+            </remarks>
+        </member>
         <member name="M:E_Commerce.API.Controllers.ProductController.GetProduct(System.Guid)">
             <summary>
             Retrieves the details of a specific product by its ID.
@@ -635,6 +651,18 @@
             <remarks>
             Use this endpoint to search for products by their name.
             </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.ProductController.GetProductsByDiscount(PaginationDto,System.Nullable{System.Double})">
+            <summary>
+            Fetches products by Discount with pagination.
+            </summary>
+            <param name="discount">Discount filter (0-100). 
+            Note: if discount is null, it will return all products with discount greater than 0.
+            if discount Not null , it will return all products with discount greater than or equal to the specified value.
+            </param>
+            <param name="pagination">Pagination details.</param>
+            <returns>Paginated list of products with the specified rating.</returns>
+            
         </member>
         <member name="M:E_Commerce.API.Controllers.ProductController.GetProductByCategory(System.Guid,PaginationDto)">
             <summary>

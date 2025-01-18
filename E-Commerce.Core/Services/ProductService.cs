@@ -19,20 +19,20 @@ namespace E_Commerce.Core.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<ProductService> _logger;
         private readonly IProductImagesService _productImagesService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserContext _userContext;
 
         public ProductService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             ILogger<ProductService> logger,
             IProductImagesService productImagesService,
-            IHttpContextAccessor httpContextAccessor)
+            IUserContext userContext)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _logger = logger;
             _productImagesService = productImagesService;
-            _httpContextAccessor = httpContextAccessor;
+            _userContext = userContext;
         }
 
         private async Task ExecuteWithTransactionAsync(Func<Task> action)
@@ -54,45 +54,6 @@ namespace E_Commerce.Core.Services
                 }
             }
         }
-
-        private async Task<ApplicationUser?> GetCurrentUserAsync()
-        {
-            var email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-
-            if (string.IsNullOrEmpty(email))
-            {
-                _logger.LogWarning("No user is authenticated.");
-                return null;
-            }
-
-            var user = await _unitOfWork.Repository<ApplicationUser>()
-                .GetByAsync(x => x.Email == email);
-
-            return user;
-        }
-
-        private async Task<Brand> CheckBrandAsync(Guid brandID)
-        {
-            var brand = await _unitOfWork.Repository<Brand>()
-                .GetByAsync(x => x.BrandID == brandID);
-            if (brand == null)
-            {
-                _logger.LogWarning("Brand not found with ID: {BrandID}", brandID);
-                throw new ArgumentNullException(nameof(brand));
-            }
-            return brand;
-        }
-        private async Task<Category> CheckCategoryAsync(Guid categoryID)
-        {
-            var category = await _unitOfWork.Repository<Category>()
-                .GetByAsync(x => x.CategoryID == categoryID);
-            if (category == null)
-            {
-                _logger.LogWarning("Category not found with ID: {CategoryID}", category);
-             throw new ArgumentNullException(nameof(category));
-            }
-            return category;
-        }
         private async Task HandleProductWishListAsync(IEnumerable<ProductResponse> products, Guid userId)
         {
             var productIds = products.Select(x => x.ProductID).ToList();
@@ -108,7 +69,29 @@ namespace E_Commerce.Core.Services
             }
         }
 
-
+        private string GeneratePromotionLabel(double discount)
+        {
+            if (discount >= 50)
+            {
+                return "Best Save";
+            }
+            else if (discount >= 35)
+            {
+                return "Save 35%";
+            }
+            else if (discount >= 15)
+            {
+                return "Save 15%";
+            }
+            else if (discount > 0)
+            {
+                return "Sale";
+            }
+            else
+            {
+                return "Regular Price";
+            }
+        }
         public async Task<ProductResponse?> CreateAsync(ProductAddRequest? request)
         {
             if (request == null)
@@ -121,20 +104,23 @@ namespace E_Commerce.Core.Services
 
             ValidationHelper.ValidateModel(request);
 
-            var user = await GetCurrentUserAsync();
+            var user = await _userContext.GetCurrentUserAsync();
             if (user == null)
             {
                 _logger.LogWarning("User not found.");
                 throw new ArgumentNullException(nameof(user));
             }
-            var brand = await CheckBrandAsync(request.BrandID);
-            var category = await CheckCategoryAsync(request.CategoryID);
+            var brand = await _unitOfWork.Repository<Brand>()
+                .CheckEntityAsync(x => x.BrandID == request.BrandID, "Brand");
+            var category = await _unitOfWork.Repository<Category>()
+                .CheckEntityAsync(x => x.CategoryID == request.CategoryID, "Category");
 
             var product = _mapper.Map<Product>(request);
             product.UserID = user.Id;
             product.Brand = brand;
             product.User = user;
             product.Category = category;
+            product.PromotionLabel = GeneratePromotionLabel(product.Discount);
 
             await ExecuteWithTransactionAsync(async () =>
             {
@@ -217,8 +203,8 @@ namespace E_Commerce.Core.Services
                     TotalCount = 0
                 };
             }
-            var user = await GetCurrentUserAsync();
-            
+            var user = await _userContext.GetCurrentUserAsync();
+
             var productResponses = _mapper.Map<List<ProductResponse>>(products);
 
             if (user != null)
@@ -263,7 +249,7 @@ namespace E_Commerce.Core.Services
                 _logger.LogWarning("UpdateAsync called with a null request.");
                 throw new ArgumentNullException(nameof(request));
             }
-            var user = await GetCurrentUserAsync();
+            var user = await _userContext.GetCurrentUserAsync();
             if (user == null)
             {
                 _logger.LogWarning("User not found.");
@@ -288,6 +274,7 @@ namespace E_Commerce.Core.Services
             }
 
             _mapper.Map(request, oldProduct);
+            oldProduct.PromotionLabel = GeneratePromotionLabel(oldProduct.Discount);
 
             await ExecuteWithTransactionAsync(async () =>
             {

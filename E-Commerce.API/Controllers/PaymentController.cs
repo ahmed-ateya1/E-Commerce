@@ -18,7 +18,7 @@ namespace E_Commerce.API.Controllers
         private readonly ILogger<PaymentController> _logger;
         private readonly IOrderServices _orderServices;
         private readonly IUnitOfWork _unitOfWork;
-        private const string StripeWebhookSecret = "whsec_JjHcC9SCvZRmKv59pu1wiSXhxVz3lQAG";
+        private const string StripeWebhookSecret = "whsec_4ff41a6d0d501015c895ced1d49519a09462910e26ddc3ac2a39722c37e2ca32";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PaymentController"/> class.

@@ -1,12 +1,7 @@
 ﻿using E_Commerce.Core.Domain.RepositoriesContract;
 using E_Commerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace E_Commerce.Infrastructure.Repositories
 {
@@ -31,6 +26,15 @@ namespace E_Commerce.Infrastructure.Repositories
         {
             return await _dbSet.AnyAsync(filter);
         }
+
+        public async Task<T> CheckEntityAsync(Expression<Func<T, bool>> predicate, string entityName)
+        {
+            var model = await _db.Set<T>().FirstOrDefaultAsync(predicate);
+            if (model is null)
+                throw new ArgumentNullException($"{entityName} not found");
+            return model;
+        }
+
 
         public async Task<long> CountAsync(Expression<Func<T, bool>>? filter = null)
         {

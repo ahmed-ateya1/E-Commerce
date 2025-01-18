@@ -22,12 +22,7 @@ namespace E_Commerce.Core.Services
             _logger = logger;
         }
 
-        private async Task<bool> IsProductExistAsync(Guid productID)
-        {
-            var exists = await _unitOfWork.Repository<Product>().AnyAsync(x => x.ProductID == productID);
-            _logger.LogInformation("Checked if product with ID {ProductID} exists: {Exists}", productID, exists);
-            return exists;
-        }
+     
 
         private async Task ExecuteWithTransactionAsync(Func<Task> action)
         {
@@ -51,7 +46,7 @@ namespace E_Commerce.Core.Services
             if (request == null) throw new ArgumentNullException(nameof(request));
             ValidationHelper.ValidateModel(request);
 
-            if (!await IsProductExistAsync(request.ProductID))
+            if (await _unitOfWork.Repository<Product>().CheckEntityAsync(x=>x.ProductID == request.ProductID,"Profduct") == null)
                 throw new ArgumentException("Product not found.");
 
             _logger.LogInformation("Creating a new technical specification for ProductID {ProductID}.", request.ProductID);
@@ -126,7 +121,7 @@ namespace E_Commerce.Core.Services
             if (request == null) throw new ArgumentNullException(nameof(request));
             ValidationHelper.ValidateModel(request);
 
-            if (!await IsProductExistAsync(request.ProductID))
+            if (await _unitOfWork.Repository<Product>().CheckEntityAsync(x => x.ProductID == request.ProductID, "Profduct") == null)
                 throw new ArgumentException("Product not found.");
 
             _logger.LogInformation("Updating technical specification with ID {ID}.", request.TechnicalSpecificationID);

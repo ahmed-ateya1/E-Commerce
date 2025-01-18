@@ -8,12 +8,15 @@ public class Product
     public string ProductDescription { get; set; }
     public decimal ProductPrice { get; set; }
     public double Discount { get; set; }
+    public int StockQuantityBeforeOrder { get; set; }
     public int StockQuantity { get; set; }
     public int? WarrantyPeriod { get; set; }
     public string? Color { get; set; }
     public int ModelNumber { get; set; }
     public double AvgRating { get; set; }
     public long TotalReviews { get; set; }
+    public long TotalOrders { get; set; }
+    public string PromotionLabel { get; set; }
     public DateTime AddedAt { get; set; } = DateTime.UtcNow;
 
     public Guid UserID { get; set; }
@@ -30,9 +33,15 @@ public class Product
     public virtual ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+    public virtual ICollection<Deal> Deals { get; set; } = new List<Deal>();
 
     public decimal CalculateDiscountedPrice()
     {
         return ProductPrice - (ProductPrice * (decimal)Discount / 100);
     }
+    public bool IsInStock()
+    {
+        return StockQuantity > 0;
+    }
+
 }

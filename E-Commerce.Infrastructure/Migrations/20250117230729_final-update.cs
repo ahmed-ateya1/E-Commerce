@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace E_Commerce.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class finalupdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -286,12 +286,15 @@ namespace E_Commerce.Infrastructure.Migrations
                     ProductDescription = table.Column<string>(type: "nvarchar(800)", maxLength: 800, nullable: false),
                     ProductPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Discount = table.Column<double>(type: "float", nullable: false),
+                    StockQuantityBeforeOrder = table.Column<int>(type: "int", nullable: false),
                     StockQuantity = table.Column<int>(type: "int", nullable: false),
                     WarrantyPeriod = table.Column<int>(type: "int", nullable: true),
                     Color = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ModelNumber = table.Column<int>(type: "int", nullable: false),
                     AvgRating = table.Column<double>(type: "float", nullable: false),
                     TotalReviews = table.Column<long>(type: "bigint", nullable: false),
+                    TotalOrders = table.Column<long>(type: "bigint", nullable: false),
+                    PromotionLabel = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AddedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BrandID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -329,6 +332,8 @@ namespace E_Commerce.Infrastructure.Migrations
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SubTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     OrderStatus = table.Column<int>(type: "int", nullable: false),
+                    PaymentIntentID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ClientSecret = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AddressID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DeliveryMethodID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)

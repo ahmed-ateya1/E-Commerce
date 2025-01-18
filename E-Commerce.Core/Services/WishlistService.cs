@@ -17,20 +17,19 @@ namespace E_Commerce.Core.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<WishlistService> _logger;
         private readonly IMapper _mapper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserContext _userContext;
 
         public WishlistService
             (
             IUnitOfWork unitOfWork,
             ILogger<WishlistService> logger,
-            IMapper mapper
-,
-            IHttpContextAccessor httpContextAccessor)
+            IMapper mapper,
+            IUserContext userContext)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
-            _httpContextAccessor = httpContextAccessor;
+            _userContext = userContext;
         }
         private async Task<Product?> GetProductAsync(Guid productID)
         {
@@ -61,27 +60,6 @@ namespace E_Commerce.Core.Services
                 throw;
             }
         }
-        private async Task<ApplicationUser> GetCurrentUserAsync()
-        {
-            var email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-
-            if (string.IsNullOrEmpty(email))
-            {
-                _logger.LogWarning("No user is authenticated.");
-                throw new InvalidOperationException("User is not authenticated.");
-            }
-
-            var user = await _unitOfWork.Repository<ApplicationUser>()
-                .GetByAsync(x => x.Email == email);
-
-            if (user == null)
-            {
-                _logger.LogWarning("User not found: {email}", email);
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            return user;
-        }
         public async Task<WishlistResponse?> CreateAsync(WishlistAddRequest? request)
         {
             if (request == null)
@@ -94,7 +72,12 @@ namespace E_Commerce.Core.Services
 
             _logger.LogInformation("Creating a new wishlist item for product with ID {ProductID}.", request.ProductID);
 
-            var user = await GetCurrentUserAsync();
+            var user = await _userContext.GetCurrentUserAsync();
+            if (user == null)
+            {
+                _logger.LogWarning("User not found.");
+                throw new ArgumentNullException(nameof(user));
+            }
             var product = await GetProductAsync(request.ProductID);
 
             var wishlist = _mapper.Map<Wishlist>(request);
@@ -178,7 +161,12 @@ namespace E_Commerce.Core.Services
             _logger.LogInformation("Updating wishlist item with ID {WishlistID}.", request.WishlistID);
 
             var product = await GetProductAsync(request.ProductID);
-            var user = await GetCurrentUserAsync();
+            var user = await _userContext.GetCurrentUserAsync();
+            if(user == null)
+            {
+                _logger.LogWarning("User not found.");
+                throw new ArgumentNullException(nameof(user));
+            }
 
             var oldWishlist = await _unitOfWork.Repository<Wishlist>()
                 .GetByAsync(x => x.WishlistID == request.WishlistID , includeProperties: "Product,Product.ProductImages,Product.Category");

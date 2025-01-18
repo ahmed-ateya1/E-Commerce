@@ -19,22 +19,22 @@ namespace E_Commerce.Core.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<OrderServices> _logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPaymentService _paymentService;
+        private readonly IUserContext _userContext;
 
         public OrderServices
             (
             IUnitOfWork unitOfWork,
             IMapper mapper,
             ILogger<OrderServices> logger,
-            IHttpContextAccessor httpContextAccessor,
-            IPaymentService paymentService)
+            IPaymentService paymentService,
+            IUserContext userContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
-            _httpContextAccessor = httpContextAccessor;
             _paymentService = paymentService;
+            _userContext = userContext;
         }
         private async Task ExecuteWithTransactionAsync(Func<Task> action)
         {
@@ -56,26 +56,6 @@ namespace E_Commerce.Core.Services
             }
         }
 
-        private async Task<ApplicationUser> GetCurrentUserAsync()
-        {
-            var email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-
-            if (string.IsNullOrEmpty(email))
-            {
-                _logger.LogWarning("No user is authenticated.");
-                throw new UnauthorizedAccessException("No user is authenticated.");
-            }
-
-            var user = await _unitOfWork.Repository<ApplicationUser>()
-                .GetByAsync(x => x.Email == email);
-            if (user == null)
-            {
-                _logger.LogError("User not found.");
-                throw new KeyNotFoundException("User not found.");
-            }
-            return user;
-        }
-
         public async Task<ServiceResponse> CreateAsync(OrderAddRequest? orderRequest)
         {
             _logger.LogInformation("Creating a new order.");
@@ -86,7 +66,7 @@ namespace E_Commerce.Core.Services
                 throw new ArgumentNullException(nameof(orderRequest));
             }
 
-            var user = await GetCurrentUserAsync();
+            var user = await _userContext.GetCurrentUserAsync();
             var address = await _unitOfWork.Repository<Address>()
                 .GetByAsync(x => x.AddressID == orderRequest.AddressID);
             if (address == null)
@@ -148,6 +128,7 @@ namespace E_Commerce.Core.Services
                         StatusCode = HttpStatusCode.BadRequest
                     };
                 }
+                product.TotalOrders++;
                 product.StockQuantity -= orderItemRequest.Quantity;
                 await _unitOfWork.Repository<Product>().UpdateAsync(product);
 

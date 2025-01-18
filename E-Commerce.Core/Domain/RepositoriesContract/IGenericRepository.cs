@@ -20,5 +20,7 @@ namespace E_Commerce.Core.Domain.RepositoriesContract
         Task<T> UpdateAsync(T model);
         void Detach(T entity);
         Task SaveAsync();
+        Task<T> CheckEntityAsync(Expression<Func<T, bool>> predicate, string entityName);
+
     }
 }

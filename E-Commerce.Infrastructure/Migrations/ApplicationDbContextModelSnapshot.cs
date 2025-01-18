@@ -627,8 +627,18 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.Property<decimal>("ProductPrice")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("PromotionLabel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("StockQuantity")
                         .HasColumnType("int");
+
+                    b.Property<int>("StockQuantityBeforeOrder")
+                        .HasColumnType("int");
+
+                    b.Property<long>("TotalOrders")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("TotalReviews")
                         .HasColumnType("bigint");

@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using E_Commerce.Core.Domain.Entities;
-using E_Commerce.Core.Domain.IdentityEntities;
 using E_Commerce.Core.Domain.RepositoriesContract;
 using E_Commerce.Core.Dtos.AddressDto;
 using E_Commerce.Core.ServicesContract;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
-using System.Security.Claims;
 
 namespace E_Commerce.Core.Services
 {
@@ -16,18 +13,18 @@ namespace E_Commerce.Core.Services
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<AddressServices> _logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserContext _userContext;
 
         public AddressServices
             (IMapper mapper,
             IUnitOfWork unitOfWork,
             ILogger<AddressServices> logger,
-            IHttpContextAccessor httpContextAccessor)
+            IUserContext userContext)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _httpContextAccessor = httpContextAccessor;
+            _userContext = userContext;
         }
         private async Task ExecuteWithTransactionAsync(Func<Task> action)
         {
@@ -48,26 +45,6 @@ namespace E_Commerce.Core.Services
                 }
             }
         }
-        private async Task<ApplicationUser?> GetCurrentUserAsync()
-        {
-            var email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-
-            if (string.IsNullOrEmpty(email))
-            {
-                _logger.LogWarning("No user is authenticated.");
-               throw new UnauthorizedAccessException("No user is authenticated.");
-            }
-
-            var user = await _unitOfWork.Repository<ApplicationUser>()
-                .GetByAsync(x => x.Email == email);
-
-            if (user == null)
-            {
-                _logger.LogError("User not found");
-                throw new UnauthorizedAccessException("User not found");
-            }
-            return user;
-        }
         public async Task<AddressResponse?> CreateAsync(AddressAddRequest? addressAddRequest)
         {
             if (addressAddRequest == null)
@@ -75,7 +52,7 @@ namespace E_Commerce.Core.Services
                 _logger.LogError("AddressAddRequest is null");
                 return null;
             }
-            var user = await GetCurrentUserAsync();
+            var user = await _userContext.GetCurrentUserAsync();
             var address = _mapper.Map<Address>(addressAddRequest);
             address.UserID = user.Id;
             address.User = user;

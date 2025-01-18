@@ -7,6 +7,7 @@ using E_Commerce.Core.Queries.ProductQueries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
 using System.Net;
 
 namespace E_Commerce.API.Controllers
@@ -204,7 +205,39 @@ namespace E_Commerce.API.Controllers
                 Result = response
             });
         }
-
+        /// <summary>
+        /// Retrieves a paginated list of Top products.
+        /// </summary>
+        /// <param name="pagination">The pagination details including page number and page size.</param>
+        /// <returns>
+        /// An <see cref="ActionResult{ApiResponse}"/> containing the result of the operation:
+        /// <list type="bullet">
+        /// <item><description><see cref="HttpStatusCode.OK"/>: Products fetched successfully.</description></item>
+        /// <item><description><see cref="HttpStatusCode.BadRequest"/>: Failed to fetch products.</description></item>
+        /// </list>
+        /// </returns>
+        /// <remarks>
+        /// Use this endpoint to get a paginated list of all products.
+        /// </remarks>
+        [HttpGet("getTopProducts")]
+        public async Task<ActionResult<ApiResponse>> GetTopProducts([FromQuery] PaginationDto pagination)
+        {
+            var response = await _mediator.Send(new GetTopProductsQuery(pagination));
+            if (response == null)
+                return BadRequest(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Failed to get top products.",
+                    StatusCode = HttpStatusCode.BadRequest
+                });
+            return Ok(new ApiResponse()
+            {
+                StatusCode = HttpStatusCode.OK,
+                IsSuccess = true,
+                Message = "Top products fetched successfully.",
+                Result = response
+            });
+        }
         /// <summary>
         /// Retrieves the details of a specific product by its ID.
         /// </summary>
@@ -273,7 +306,35 @@ namespace E_Commerce.API.Controllers
                 Result = response
             });
         }
-
+        /// <summary>
+        /// Fetches products by Discount with pagination.
+        /// </summary>
+        /// <param name="discount">Discount filter (0-100). 
+        /// Note: if discount is null, it will return all products with discount greater than 0.
+        /// if discount Not null , it will return all products with discount greater than or equal to the specified value.
+        /// </param>
+        /// <param name="pagination">Pagination details.</param>
+        /// <returns>Paginated list of products with the specified rating.</returns>
+        /// 
+        [HttpGet("getProductsByDiscount")]
+        public async Task<ActionResult<ApiResponse>> GetProductsByDiscount([FromQuery]PaginationDto pagination , double? discount = null)
+        {
+            var response = await _mediator.Send(new GetProductsByDiscountQuery() { Discount = discount , Pagination = pagination});
+            if (response == null)
+                return BadRequest(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Failed to get product by discount.",
+                    StatusCode = HttpStatusCode.BadRequest
+                });
+            return Ok(new ApiResponse()
+            {
+                StatusCode = HttpStatusCode.OK,
+                IsSuccess = true,
+                Message = "Product fetched by discount successfully.",
+                Result = response
+            });
+        }
         /// <summary>
         /// Retrieves a paginated list of products by category.
         /// </summary>

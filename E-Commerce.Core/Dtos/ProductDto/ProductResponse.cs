@@ -12,6 +12,10 @@
         public string BrandName { get; set; }
         public string CategoryName { get; set; }
         public bool ProductInWishlist { get; set; }
+        public int TotalOrders { get; set; }    
+        public int StockQuantityBeforeOrder { get; set; }
+        public string PromotionLabel { get; set; }
+        public bool IsInStock { get; set; }
         public List<string> ProductFilesUrl { get; set; } = new List<string>();
     }
 }
