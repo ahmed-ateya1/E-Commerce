@@ -204,7 +204,6 @@ namespace E_Commerce.Core.Services
                 };
             }
             var user = await _userContext.GetCurrentUserAsync();
-
             var productResponses = _mapper.Map<List<ProductResponse>>(products);
 
             if (user != null)
