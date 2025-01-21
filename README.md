@@ -130,7 +130,6 @@ The project follows a clean architecture approach, separating concerns into mult
 
 ## 16. **Deal**
 -  represents a promotional deal associated with a product in an e-commerce system.
----
 
 ## Key Functionalities
 
