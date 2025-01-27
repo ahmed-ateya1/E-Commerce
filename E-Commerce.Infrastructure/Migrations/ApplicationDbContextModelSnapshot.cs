@@ -118,6 +118,30 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.ToTable("Categories", (string)null);
                 });
 
+            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Deal", b =>
+                {
+                    b.Property<Guid>("DealID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Discount")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ProductID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("DealID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("Deals", (string)null);
+                });
+
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.DeliveryMethod", b =>
                 {
                     b.Property<Guid>("DeliveryMethodID")
@@ -244,6 +268,12 @@ namespace E_Commerce.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<long>("TotalDownVotes")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TotalUpVotes")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("TotalVotes")
                         .HasColumnType("bigint");
@@ -681,6 +711,17 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Deal", b =>
+                {
+                    b.HasOne("Product", "Product")
+                        .WithMany("Deals")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Notifications", b =>
                 {
                     b.HasOne("E_Commerce.Core.Domain.IdentityEntities.ApplicationUser", "User")
@@ -992,6 +1033,8 @@ namespace E_Commerce.Infrastructure.Migrations
 
             modelBuilder.Entity("Product", b =>
                 {
+                    b.Navigation("Deals");
+
                     b.Navigation("OrderItems");
 
                     b.Navigation("ProductImages");

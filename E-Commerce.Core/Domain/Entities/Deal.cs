@@ -3,7 +3,7 @@
     public class Deal
     {
         public Guid DealID { get; set; } = Guid.NewGuid();
-        public decimal Discount { get; set; }
+        public double Discount { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public Guid ProductID { get; set; }

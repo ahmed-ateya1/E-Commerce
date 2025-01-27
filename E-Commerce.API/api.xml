@@ -348,6 +348,97 @@
             <response code="200">Subcategories retrieved successfully.</response>
             <response code="400">Failed to retrieve Subcategories.</response>
         </member>
+        <member name="M:E_Commerce.API.Controllers.DealController.AddDeal(DealAddRequest)">
+            <summary>
+            Adds a new deal based on the provided request data.
+            </summary>
+            <param name="request">An object of type <see cref="T:DealAddRequest"/> containing the details of the deal to be added.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating success or failure. 
+            If the deal creation fails, a BadRequest response is returned, otherwise, the created deal details are returned.
+            </returns>
+            <remarks>
+            This method validates the deal request and uses the <see cref="T:E_Commerce.Core.ServicesContract.IDealService"/> to create the deal. 
+            The deal details are then saved in the system and returned in the response.
+            </remarks>
+            <response code="200">Deal added successfully.</response>
+            <response code="400">Failed to add the deal or invalid data.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.DealController.UpdateDeal(E_Commerce.Core.Dtos.DealDto.DealUpdateRequest)">
+            <summary>
+            Updates an existing deal based on the provided request data.
+            </summary>
+            <param name="request">An object of type <see cref="T:E_Commerce.Core.Dtos.DealDto.DealUpdateRequest"/> containing the updated details for the deal.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating success or failure. 
+            If the deal update fails, a BadRequest response is returned, otherwise, the updated deal details are returned.
+            </returns>
+            <remarks>
+            This method validates the deal update request and uses the <see cref="T:E_Commerce.Core.ServicesContract.IDealService"/> to update the deal. 
+            The updated deal details are then saved in the system and returned in the response.
+            </remarks>
+            <response code="200">Deal updated successfully.</response>
+            <response code="400">Failed to update the deal or invalid data.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.DealController.DeleteDeal(System.Guid)">
+            <summary>
+            Deletes a deal based on the provided deal ID.
+            </summary>
+            <param name="id">The unique identifier of the deal to be deleted.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> indicating success or failure. 
+            If the deal deletion fails, a BadRequest response is returned, otherwise, a success message is returned.
+            </returns>
+            <remarks>
+            This method uses the <see cref="T:E_Commerce.Core.ServicesContract.IDealService"/> to delete the deal from the system. 
+            The deal is removed, and the appropriate response is returned.
+            </remarks>
+            <response code="200">Deal deleted successfully.</response>
+            <response code="400">Failed to delete the deal or invalid ID.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.DealController.GetDeal(System.Guid)">
+            <summary>
+            Fetches a specific deal by its unique identifier.
+            </summary>
+            <param name="id">The unique identifier of the deal to be fetched.</param>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> containing the deal details if found, or an error message if not.
+            </returns>
+            <remarks>
+            This method retrieves the deal using the <see cref="T:E_Commerce.Core.ServicesContract.IDealService"/>. If the deal is found, the details are returned; 
+            otherwise, an error message is returned.
+            </remarks>
+            <response code="200">Deal retrieved successfully.</response>
+            <response code="400">Failed to retrieve the deal or invalid ID.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.DealController.GetAllDeals(PaginationDto)">
+            <summary>
+            Fetches all deals available in the system.
+            </summary>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> containing a list of all deals.
+            </returns>
+            <remarks>
+            This method retrieves all deals using the <see cref="T:E_Commerce.Core.ServicesContract.IDealService"/>. 
+            A collection of all deals is returned in the response.
+            </remarks>
+            <response code="200">All deals retrieved successfully.</response>
+            <response code="400">Failed to retrieve the deals.</response>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.DealController.GetAllDealsActive(PaginationDto)">
+            <summary>
+            Fetches all active deals available in the system.
+            </summary>
+            <returns>
+            Returns an <see cref="T:E_Commerce.Core.Dtos.ApiResponse"/> containing a list of all active deals.
+            </returns>
+            <remarks>
+            This method retrieves all deals using the <see cref="T:E_Commerce.Core.ServicesContract.IDealService"/> and filters them to include only active deals.
+            A collection of active deals is returned in the response.
+            </remarks>
+            <response code="200">All active deals retrieved successfully.</response>
+            <response code="400">Failed to retrieve the active deals.</response>
+        </member>
         <member name="M:E_Commerce.API.Controllers.DeliveryMethodController.AddDeliveryMethodAsync(E_Commerce.Core.Dtos.DeliveryMethodDto.DeliveryMethodAddRequest)">
             <summary>
             Adds a new delivery method.
@@ -669,6 +760,23 @@
             Retrieves a paginated list of products by category.
             </summary>
             <param name="categoryId">The unique identifier of the category.</param>
+            <param name="pagination">The pagination details including page number and page size.</param>
+            <returns>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult`1"/> containing the result of the operation:
+            <list type="bullet">
+            <item><description><see cref="F:System.Net.HttpStatusCode.OK"/>: Products fetched by category successfully.</description></item>
+            <item><description><see cref="F:System.Net.HttpStatusCode.BadRequest"/>: Failed to fetch products by category.</description></item>
+            </list>
+            </returns>
+            <remarks>
+            Use this endpoint to get a paginated list of products within a specific category.
+            </remarks>
+        </member>
+        <member name="M:E_Commerce.API.Controllers.ProductController.GetProductByParentCategory(System.Guid,PaginationDto)">
+            <summary>
+            Retrieves a paginated list of products by category.
+            </summary>
+            <param name="parentID">The unique identifier of the category.</param>
             <param name="pagination">The pagination details including page number and page size.</param>
             <returns>
             An <see cref="T:Microsoft.AspNetCore.Mvc.ActionResult`1"/> containing the result of the operation:

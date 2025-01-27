@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250117230729_final-update")]
-    partial class finalupdate
+    [Migration("20250118011622_add-dealTable")]
+    partial class adddealTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,6 +119,30 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.HasIndex("ParentCategoryID");
 
                     b.ToTable("Categories", (string)null);
+                });
+
+            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Deal", b =>
+                {
+                    b.Property<Guid>("DealID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Discount")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ProductID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("DealID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("Deals", (string)null);
                 });
 
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.DeliveryMethod", b =>
@@ -684,6 +708,17 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Deal", b =>
+                {
+                    b.HasOne("Product", "Product")
+                        .WithMany("Deals")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("E_Commerce.Core.Domain.Entities.Notifications", b =>
                 {
                     b.HasOne("E_Commerce.Core.Domain.IdentityEntities.ApplicationUser", "User")
@@ -995,6 +1030,8 @@ namespace E_Commerce.Infrastructure.Migrations
 
             modelBuilder.Entity("Product", b =>
                 {
+                    b.Navigation("Deals");
+
                     b.Navigation("OrderItems");
 
                     b.Navigation("ProductImages");

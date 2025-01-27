@@ -4,6 +4,8 @@
     {
         public Guid ReviewID { get; set; }
         public long TotalVotes { get; set; }
+        public long TotalUpVotes { get; set; }
+        public long TotalDownVotes { get; set; }
         public DateTime ReviewDate { get; set; }
         public Guid UserID { get; set; }
         public string UserName { get; set; }

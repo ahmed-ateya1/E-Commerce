@@ -158,7 +158,7 @@ namespace E_Commerce.API.Controllers
         public async Task<ActionResult<ApiResponse>> GetAllReviews(Guid productID, [FromQuery] PaginationDto pagination)
         {
             _logger.LogInformation("Getting all reviews");
-            var response = await _reviewService.GetAllAsync(x => x.ProductID == productID);
+            var response = await _reviewService.GetAllAsync(x => x.ProductID == productID,pagination);
             if (response == null)
             {
                 _logger.LogError("Failed to get reviews");
@@ -189,7 +189,7 @@ namespace E_Commerce.API.Controllers
         public async Task<ActionResult<ApiResponse>> GetReviewReplies(Guid reviewID, [FromQuery] PaginationDto pagination)
         {
             _logger.LogInformation("Getting review replies");
-            var response = await _reviewService.GetAllAsync(x => x.ParentReviewID == reviewID);
+            var response = await _reviewService.GetAllAsync(x => x.ParentReviewID == reviewID,pagination);
             if (response == null)
             {
                 _logger.LogError("Failed to get review replies");

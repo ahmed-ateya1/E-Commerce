@@ -184,7 +184,7 @@ namespace E_Commerce.Core.Services
             var products = await _unitOfWork.Repository<Product>()
                 .GetAllAsync(
                     predicate,
-                    includeProperties: "Brand,Category,User,ProductImages",
+                    includeProperties: "Brand,Reviews,Category,User,ProductImages,Deals",
                     sortBy: pagination.SortBy,
                     sortDirection: pagination.SortDirection,
                     pageSize: pagination.PageSize,
@@ -203,8 +203,23 @@ namespace E_Commerce.Core.Services
                     TotalCount = 0
                 };
             }
-            var user = await _userContext.GetCurrentUserAsync();
+            var productsDeals = await _unitOfWork.Repository<Deal>()
+                .GetAllAsync(includeProperties: "Product");
+
+            var activeDeals = productsDeals.Where(x => x.IsActiveDeal()).ToList();
             var productResponses = _mapper.Map<List<ProductResponse>>(products);
+
+            foreach (var productResponse in productResponses)
+            {
+                var deal = productsDeals.FirstOrDefault(x => x.ProductID == productResponse.ProductID);
+                if (deal != null)
+                {
+                    productResponse.Discount = deal.Discount;
+                    productResponse.PromotionLabel = GeneratePromotionLabel(deal.Discount);
+                    productResponse.ProductPriceAfterDiscount = productResponse.ProductPrice - (productResponse.ProductPrice * (decimal)deal.Discount / 100);
+                }
+            }
+            var user = await _userContext.GetCurrentUserAsync();
 
             if (user != null)
             {
@@ -229,14 +244,18 @@ namespace E_Commerce.Core.Services
             _logger.LogInformation("Fetching a single product based on the provided predicate.");
 
             var product = await _unitOfWork.Repository<Product>()
-                .GetByAsync(predicate,includeProperties: "Brand,Category,User,ProductImages", isTracked: isTracked);
+                .GetByAsync(predicate, includeProperties: "Brand,Category,Reviews,User,ProductImages,Deals", isTracked: isTracked);
 
             if (product == null)
             {
                 _logger.LogWarning("Product not found based on the predicate.");
                 throw new ArgumentNullException(nameof(product));
             }
-
+            if(product.Deals.Any())
+            {
+                product.Discount = product.Deals.First().Discount;
+                product.PromotionLabel = GeneratePromotionLabel(product.Discount);
+            }
             _logger.LogInformation("Product fetched successfully with ID: {ProductID}", product.ProductID);
             return _mapper.Map<ProductResponse>(product);
         }
@@ -259,7 +278,7 @@ namespace E_Commerce.Core.Services
             ValidationHelper.ValidateModel(request);
 
             var oldProduct = await _unitOfWork.Repository<Product>()
-                .GetByAsync(x => x.ProductID == request.ProductID, includeProperties: "Brand,Category,User,ProductImages");
+                .GetByAsync(x => x.ProductID == request.ProductID, includeProperties: "Brand,Reviews,Category,User,ProductImages");
 
             if (oldProduct == null)
             {

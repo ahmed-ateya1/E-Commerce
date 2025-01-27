@@ -22,6 +22,7 @@ public class ProductConfig : Profile
             .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.User != null ? x.User.UserName : string.Empty))
             .ForMember(x => x.ProductPriceAfterDiscount, opt => opt.MapFrom(x => x.CalculateDiscountedPrice()))
             .ForMember(x => x.ProductFilesUrl, opt => opt.MapFrom(x => x.ProductImages.Select(p => p.ImageURL).ToList()))
-            .ForMember(x => x.IsInStock, opt => opt.MapFrom(x => x.IsInStock()));
+            .ForMember(x => x.IsInStock, opt => opt.MapFrom(x => x.IsInStock()))
+            .ReverseMap();
     }
 }
