@@ -1,3 +1,7 @@
+Here’s the updated `README.md` file with a section added for **Docker** usage. This section explains how to build and run the application using Docker, making it easier for developers to set up the project in a containerized environment.
+
+---
+
 # E-Commerce.API
 
 ## Overview
@@ -30,7 +34,7 @@ E-Commerce.API is a full-featured backend application designed for an online sho
 - **AutoMapper**: For mapping between DTOs and entities.
 - **SignalR**: For real-time application features such as notifications.
 - **Swagger**: For API documentation.
-- **Fluent Validation**: Provide a fluent validation for defing mode validation.
+- **Fluent Validation**: Provides fluent validation for defining model validation.
 
 ---
 
@@ -128,8 +132,10 @@ The project follows a clean architecture approach, separating concerns into mult
 - Stores reviews for products.
 - Fields include `Content`, `Rating`, `ProductId`, and `UserId`.
 
-## 16. **Deal**
--  represents a promotional deal associated with a product in an e-commerce system.
+### 16. **Deal**
+- Represents a promotional deal associated with a product in an e-commerce system.
+
+---
 
 ## Key Functionalities
 
@@ -177,6 +183,64 @@ The project follows a clean architecture approach, separating concerns into mult
 
 ---
 
+## Docker Support
+
+The application is containerized using Docker, making it easy to set up and run in any environment.
+
+### Prerequisites
+- Install [Docker](https://docs.docker.com/get-docker/) on your machine.
+
+### Steps to Run the Application with Docker
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/ahmed-ateya1/E-Commerce.git
+   cd E-Commerce
+   ```
+
+2. **Build the Docker Image**
+   ```bash
+   docker build -t e-commerce-api .
+   ```
+
+3. **Run the Docker Container**
+   ```bash
+   docker run -p 5000:80 e-commerce-api
+   ```
+
+4. **Access the Application**
+   - Open your browser and navigate to `http://localhost:5000`.
+   - Use Swagger UI at `http://localhost:5000/swagger` to explore the API endpoints.
+
+### Docker Compose (Optional)
+If you want to run the application along with a SQL Server database, use Docker Compose:
+
+1. **Create a `docker-compose.yml` File**
+   ```yaml
+   version: '3.8'
+   services:
+     db:
+       image: mcr.microsoft.com/mssql/server:2022-latest
+       environment:
+         SA_PASSWORD: "YourStrong!Passw0rd"
+         ACCEPT_EULA: "Y"
+       ports:
+         - "1433:1433"
+     app:
+       build: .
+       ports:
+         - "5000:80"
+       depends_on:
+         - db
+   ```
+
+2. **Run Docker Compose**
+   ```bash
+   docker-compose up
+   ```
+
+---
+
 ## API Documentation
 - API documentation is available via Swagger at `/swagger`.
 
@@ -185,3 +249,6 @@ The project follows a clean architecture approach, separating concerns into mult
 ## License
 This project is licensed under the MIT License.
 
+---
+
+This updated `README.md` now includes a **Docker Support** section, providing clear instructions for building and running the application using Docker. It also includes an optional Docker Compose setup for running the application with a SQL Server database.
