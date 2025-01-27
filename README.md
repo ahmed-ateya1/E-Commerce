@@ -1,7 +1,3 @@
-Here’s the updated `README.md` file with a section added for **Docker** usage. This section explains how to build and run the application using Docker, making it easier for developers to set up the project in a containerized environment.
-
----
-
 # E-Commerce.API
 
 ## Overview
