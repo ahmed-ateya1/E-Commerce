@@ -30,6 +30,7 @@ E-Commerce.API is a full-featured backend application designed for an online sho
 - **AutoMapper**: For mapping between DTOs and entities.
 - **SignalR**: For real-time application features such as notifications.
 - **Swagger**: For API documentation.
+- **Fluent Validation**: Provide a fluent validation for defing mode validation.
 
 ---
 
@@ -127,7 +128,8 @@ The project follows a clean architecture approach, separating concerns into mult
 - Stores reviews for products.
 - Fields include `Content`, `Rating`, `ProductId`, and `UserId`.
 
----
+## 16. **Deal**
+-  represents a promotional deal associated with a product in an e-commerce system.
 
 ## Key Functionalities
 
