@@ -248,7 +248,3 @@ If you want to run the application along with a SQL Server database, use Docker 
 
 ## License
 This project is licensed under the MIT License.
-
----
-
-This updated `README.md` now includes a **Docker Support** section, providing clear instructions for building and running the application using Docker. It also includes an optional Docker Compose setup for running the application with a SQL Server database.
