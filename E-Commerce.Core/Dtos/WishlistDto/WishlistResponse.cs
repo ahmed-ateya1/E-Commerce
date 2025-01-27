@@ -10,5 +10,6 @@
         public string ProductDescription { get; set; }
         public string ProductImageURL { get; set; }
         public decimal ProductPrice { get; set; }
+        public bool IsInStock { get; set; }
     }
 }

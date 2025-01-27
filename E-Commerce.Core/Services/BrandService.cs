@@ -5,12 +5,7 @@ using E_Commerce.Core.Dtos.BrandDto;
 using E_Commerce.Core.Helper;
 using E_Commerce.Core.ServicesContract;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace E_Commerce.Core.Services
 {
@@ -85,7 +80,7 @@ namespace E_Commerce.Core.Services
         {
          
             var brands = await _unitOfWork.Repository<Brand>()
-                .GetAllAsync(filter);
+                .GetAllAsync(filter ,includeProperties: "Products");
 
             if (!brands.Any())
                 return [];
@@ -95,7 +90,7 @@ namespace E_Commerce.Core.Services
         public async Task<BrandResponse?> GetByAsync(Expression<Func<Brand, bool>> filter)
         {
             var brand = await _unitOfWork.Repository<Brand>()
-                .GetByAsync(filter);
+                .GetByAsync(filter, includeProperties: "Products");
             if (brand == null)
             {
                 return null;

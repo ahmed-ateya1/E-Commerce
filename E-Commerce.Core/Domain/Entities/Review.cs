@@ -8,6 +8,8 @@ namespace E_Commerce.Core.Domain.Entities
         public string ReviewText { get; set; }
         public int Rating { get; set; }
         public long TotalVotes { get; set; }
+        public long TotalUpVotes { get; set; }
+        public long TotalDownVotes { get; set; }
         public DateTime ReviewDate { get; set; } = DateTime.UtcNow;
 
         public Guid ProductID { get; set; }

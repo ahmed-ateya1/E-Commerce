@@ -107,7 +107,7 @@ namespace E_Commerce.Core.Services
             };
         }
 
-        public async Task<PaginatedResponse<ProductResponse>> GetAllAsync(Expression<Func<Deal, bool>>? expression = null, PaginationDto? pagination = null)
+        public async Task<PaginatedResponse<DealResponse>> GetAllAsync(Expression<Func<Deal, bool>>? expression = null, PaginationDto? pagination = null)
         {
             _logger.LogInformation("DealService.GetAllAsync called");
             pagination ??= new PaginationDto();
@@ -128,18 +128,18 @@ namespace E_Commerce.Core.Services
             if (deals == null || !deals.Any())
             {
                 _logger.LogWarning("No deals found!");
-                return new PaginatedResponse<ProductResponse>
+                return new PaginatedResponse<DealResponse>
                 {
                     PageIndex = pagination.PageIndex,
                     PageSize = pagination.PageSize,
-                    Items = new List<ProductResponse>(),
+                    Items = new List<DealResponse>(),
                     TotalCount = 0
                 };
             }
-            var result = _mapper.Map<List<ProductResponse>>(deals);
+            var result = _mapper.Map<List<DealResponse>>(deals);
 
             _logger.LogInformation("Fetched {Count} deals", result.Count);
-            return new PaginatedResponse<ProductResponse>
+            return new PaginatedResponse<DealResponse>
             {
                 Items = result,
                 PageIndex = pagination.PageIndex,

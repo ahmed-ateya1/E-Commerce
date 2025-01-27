@@ -12,6 +12,6 @@ namespace E_Commerce.Core.ServicesContract
         Task<ServiceResponse> UpdateAsync(DealUpdateRequest? request);
         Task<ServiceResponse> DeleteAsync(Guid id);
         Task<ServiceResponse> GetByAsync(Expression<Func<Deal,bool>> expression, bool isTracking = false);
-        Task<PaginatedResponse<ProductResponse>> GetAllAsync(Expression<Func<Deal,bool>>? expression = null ,PaginationDto? pagination = null);
+        Task<PaginatedResponse<DealResponse>> GetAllAsync(Expression<Func<Deal,bool>>? expression = null ,PaginationDto? pagination = null);
     }
 }

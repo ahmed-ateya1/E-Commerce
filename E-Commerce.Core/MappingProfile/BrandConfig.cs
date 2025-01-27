@@ -16,7 +16,8 @@ namespace E_Commerce.Core.MappingProfile
             CreateMap<BrandAddRequest, Brand>()
                 .ForMember(dest =>dest.BrandName, opt => opt.MapFrom(src => src.BrandName));
             CreateMap<BrandUpdateRequest, Brand>();
-            CreateMap<Brand, BrandResponse>();
+            CreateMap<Brand, BrandResponse>()
+                .ForMember(x=>x.ProductLength , opt => opt.MapFrom(src => src.Products.Count));
         }
     }
 }

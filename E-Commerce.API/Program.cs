@@ -1,6 +1,8 @@
 
 using E_Commerce.API.Middleware;
 using E_Commerce.API.StartupExtensions;
+using E_Commerce.Core.DependencyInjectionConfig;
+using E_Commerce.Infrastructure.DependencyInjectionConfig;
 
 namespace E_Commerce.API
 {
@@ -20,6 +22,8 @@ namespace E_Commerce.API
 
             // Add services to the container.
             builder.Services.ServiceConfiguration(builder.Configuration);
+            builder.Services.AddInfrastructure();
+            builder.Services.AddCore();
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();

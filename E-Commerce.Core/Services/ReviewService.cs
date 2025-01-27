@@ -164,7 +164,7 @@ namespace E_Commerce.Core.Services
             var reviews = await _unitOfWork.Repository<Review>()
                 .GetAllAsync(
                     expression,
-                    includeProperties: "User,ParentReview",
+                    includeProperties: "User,ParentReview,Votes",
                     sortBy: pagination.SortBy ?? "ReviewDate",
                     sortDirection: pagination.SortDirection,
                     pageSize: pagination.PageSize,
@@ -190,7 +190,7 @@ namespace E_Commerce.Core.Services
 
         public async Task<ReviewResponse?> GetByAsync(Expression<Func<Review, bool>> expression, bool isTracked = false)
         {
-            var review = await _unitOfWork.Repository<Review>().GetByAsync(expression, isTracked, includeProperties: "User,Product,ChildReviews,ParentReview");
+            var review = await _unitOfWork.Repository<Review>().GetByAsync(expression, isTracked, includeProperties: "User,Product,ChildReviews,ParentReview,Votes");
 
             if (review == null)
             {
@@ -206,7 +206,7 @@ namespace E_Commerce.Core.Services
             if (request == null) throw new ArgumentNullException(nameof(request));
             ValidationHelper.ValidateModel(request);
 
-            var oldReview = await _unitOfWork.Repository<Review>().GetByAsync(x => x.ReviewID == request.ReviewID, includeProperties: "User,ParentReview,ChildReviews");
+            var oldReview = await _unitOfWork.Repository<Review>().GetByAsync(x => x.ReviewID == request.ReviewID, includeProperties: "User,ParentReview,ChildReviews,Votes");
             if (oldReview == null)
             {
                 LogEntityNotFound("Review", request.ReviewID);

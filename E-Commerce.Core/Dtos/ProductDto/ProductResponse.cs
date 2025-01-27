@@ -16,6 +16,7 @@
         public int StockQuantityBeforeOrder { get; set; }
         public string PromotionLabel { get; set; }
         public bool IsInStock { get; set; }
+
         public List<string> ProductFilesUrl { get; set; } = new List<string>();
     }
 }

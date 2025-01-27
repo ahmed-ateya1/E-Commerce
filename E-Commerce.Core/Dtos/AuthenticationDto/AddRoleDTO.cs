@@ -9,10 +9,7 @@ namespace E_Commerce.Core.Dtos.AuthenticationDto
 {
     public class AddRoleDTO
     {
-        [Required]
         public Guid UserID { get; set; }
-
-        [Required]
         public string RoleName { get; set; } = string.Empty;
     }
 }

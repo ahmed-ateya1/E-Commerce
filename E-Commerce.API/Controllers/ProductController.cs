@@ -370,6 +370,41 @@ namespace E_Commerce.API.Controllers
             });
         }
 
+        /// <summary>
+        /// Retrieves a paginated list of products by category.
+        /// </summary>
+        /// <param name="parentID">The unique identifier of the category.</param>
+        /// <param name="pagination">The pagination details including page number and page size.</param>
+        /// <returns>
+        /// An <see cref="ActionResult{ApiResponse}"/> containing the result of the operation:
+        /// <list type="bullet">
+        /// <item><description><see cref="HttpStatusCode.OK"/>: Products fetched by category successfully.</description></item>
+        /// <item><description><see cref="HttpStatusCode.BadRequest"/>: Failed to fetch products by category.</description></item>
+        /// </list>
+        /// </returns>
+        /// <remarks>
+        /// Use this endpoint to get a paginated list of products within a specific category.
+        /// </remarks>
+        [HttpGet("getProductsByParentCategory/{parentID}")]
+        public async Task<ActionResult<ApiResponse>> GetProductByParentCategory(Guid parentID, [FromQuery] PaginationDto pagination)
+        {
+            var response = await _mediator.Send(new GetProductByParentCategoryQuery(parentID, pagination));
+            if (response == null)
+                return BadRequest(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Failed to get product by category.",
+                    StatusCode = HttpStatusCode.BadRequest
+                });
+            return Ok(new ApiResponse()
+            {
+                StatusCode = HttpStatusCode.OK,
+                IsSuccess = true,
+                Message = "Product fetched by category successfully.",
+                Result = response
+            });
+        }
+
 
         /// <summary>
         /// Fetches products by brand ID with pagination.

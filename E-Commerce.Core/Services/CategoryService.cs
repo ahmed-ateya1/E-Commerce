@@ -89,14 +89,27 @@ namespace E_Commerce.Core.Services
         public async Task<bool> DeleteAsync(Guid id)
         {
             var category = await _unitOfWork.Repository<Category>()
-                .GetByAsync(x => x.CategoryID == id);
+                .GetByAsync(x => x.CategoryID == id,includeProperties: "SubCategories,ParentCategory,Products");
 
             if (category is null)
                 return false;
 
             await ExecuteWithTransaction(async () =>
             {
-                if(!string.IsNullOrEmpty(category.CategoryImageURL))
+                if(category.SubCategories.Any())
+                {
+                    foreach (var subCategory in category.SubCategories)
+                    {
+                        if (!string.IsNullOrEmpty(subCategory.CategoryImageURL))
+                            await _fileServices.DeleteFile(new Uri(subCategory.CategoryImageURL).Segments.Last());
+                        await _unitOfWork.Repository<Category>().DeleteAsync(subCategory);
+                    }
+                }
+                if (category.Products.Any())
+                {
+                   await _unitOfWork.Repository<Product>().RemoveRangeAsync(category.Products);
+                }
+                if (!string.IsNullOrEmpty(category.CategoryImageURL))
                     await _fileServices.DeleteFile(new Uri(category.CategoryImageURL).Segments.Last());
                 await _unitOfWork.Repository<Category>().DeleteAsync(category);
             });

@@ -8,17 +8,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using E_Commerce.Core.Dtos.AuthenticationDto;
-using E_Commerce.Core.Domain.RepositoriesContract;
-using E_Commerce.Core.Services;
 using E_Commerce.Core.ServicesContract;
-using E_Commerce.Infrastructure.UnitOfWorkConfig;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using E_Commerce.Core.MappingProfile;
 using E_Commerce.Core.Queries.BrandQueries;
-using E_Commerce.Core.Caching;
 using E_Commerce.API.FileServices;
 using StackExchange.Redis;
-using E_Commerce.Infrastructure.Repositories;
+using FluentValidation.AspNetCore;
 
 namespace E_Commerce.API.StartupExtensions
 {
@@ -37,7 +32,7 @@ namespace E_Commerce.API.StartupExtensions
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(configuration.GetConnectionString("Hosting"));
             });
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
@@ -57,22 +52,35 @@ namespace E_Commerce.API.StartupExtensions
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-               .AddJwtBearer(o =>
-               {
-                   o.RequireHttpsMetadata = false;
-                   o.SaveToken = false;
-                   o.TokenValidationParameters = new TokenValidationParameters
-                   {
-                       ValidateIssuerSigningKey = true,
-                       ValidateIssuer = true,
-                       ValidateAudience = true,
-                       ValidateLifetime = true,
-                       ValidIssuer = configuration["JWT:Issuer"],
-                       ValidAudience = configuration["JWT:Audience"],
-                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"])),
-                       ClockSkew = TimeSpan.Zero
-                   };
-               });
+            .AddJwtBearer(o =>
+            {
+                o.RequireHttpsMetadata = false;
+                o.SaveToken = false;
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = configuration["JWT:Issuer"],
+                    ValidAudience = configuration["JWT:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"])),
+                    ClockSkew = TimeSpan.Zero
+                };
+
+                // Add custom JwtBearerEvents
+                o.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        // Handle token extraction from headers
+                        context.Token = context.Request.Headers["Authorization"]
+                            .FirstOrDefault()?.Split(" ").Last();
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
             services.Configure<DataProtectionTokenProviderOptions>(options =>
             {
                 options.TokenLifespan = TimeSpan.FromHours(1);
@@ -96,31 +104,14 @@ namespace E_Commerce.API.StartupExtensions
                 return ConnectionMultiplexer.Connect(options);
             });
             services.AddAutoMapper(typeof(BrandConfig).Assembly);
+            services.AddFluentValidationAutoValidation();
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetAllBrandQuery).Assembly));
             services.AddHealthChecks();
 
             services.Configure<JwtDTO>(configuration.GetSection("JWT"));
-            services.AddScoped<IAuthenticationServices, AuthenticationServices>();
-
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<IEmailSender, EmailSender>();
-            services.AddScoped<IBrandService, BrandService>();
-            services.AddSingleton<ICacheService, CacheService>();
-            services.AddSingleton<IMemoryCacheService, MemoryCacheService>();
-            services.AddScoped<ICategoryService, CategoryService>();
+           
             services.AddScoped<IFileServices, FileService>();
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IProductImagesService, ProductImagesService>();
-            services.AddScoped<ITechnicalSpecificationService, TechnicalSpecificationService>();
-            services.AddScoped<IWishlistService, WishlistService>();
-            services.AddScoped<IReviewService, ReviewService>();
-            services.AddScoped<IVoteService, VoteService>();
-            services.AddScoped<IShoppingCartService, ShoppingCartService>();
-            services.AddScoped<IOrderServices , OrderServices>();
-            services.AddScoped<IDeliveryMethodServices, DeliveryMethodServices>();
-            services.AddScoped<IAddressServices, AddressServices>();
-            services.AddScoped<IPaymentService, PaymentService>();
-            services.AddScoped<IUserContext, UserContext>();
+            
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
